@@ -1,9 +1,12 @@
-#include <iostream>
-#include "actions/action-type.h"
+#include <window-system/x11.h>
+#include <daemon/daemon-client.h>
+
+#include <custom-gesture-controller.h>
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    std::cout << actionTypeToStr(ActionType::FULLSCREEN_WINDOW) << "\n";
-
+    X11 windowSystem;
+    CustomGestureController gestureController(windowSystem);
+    DaemonClient daemonClient{&gestureController};
+    daemonClient.run();
     return 0;
 }

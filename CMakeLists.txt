@@ -27,7 +27,6 @@ find_package(XInput REQUIRED)
 find_package(GLib REQUIRED)
 find_package(Gtk3 REQUIRED)
 
-include_directories(${PROJECT_SOURCE_DIR}/src ${touchegg_SOURCE_DIR}/src)
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/src/*.h
         ${touchegg_SOURCE_DIR}/src/*.h
@@ -37,6 +36,8 @@ list(REMOVE_ITEM SOURCE_FILES "${touchegg_SOURCE_DIR}/src/main.cpp")
 
 add_executable(touchegg_music_client ${SOURCE_FILES})
 target_include_directories(touchegg_music_client PUBLIC
+        ${PROJECT_SOURCE_DIR}/src
+        ${touchegg_SOURCE_DIR}/src
         ${LIBUDEV_INCLUDE_DIRS}
         ${LIBINPUT_INCLUDE_DIRS}
         ${PUGIXML_INCLUDE_DIRS}
