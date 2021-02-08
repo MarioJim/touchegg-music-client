@@ -16,6 +16,9 @@ list(APPEND CMAKE_MODULE_PATH
         "${touchegg_SOURCE_DIR}/cmake/Modules")
 FetchContent_MakeAvailable(touchegg)
 
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    include(cmake/code-style.cmake)
+endif()
 
 find_package(Threads REQUIRED) # Required to use std threads
 find_package(Libudev REQUIRED)
