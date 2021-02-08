@@ -11,7 +11,9 @@ FetchContent_Declare(
         GIT_SHALLOW ON
         PATCH_COMMAND patch --strip=1 --forward -i ${PROJECT_SOURCE_DIR}/touchegg_cmake_warnings.patch || true
 )
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${touchegg_SOURCE_DIR}/cmake/Modules")
+list(APPEND CMAKE_MODULE_PATH
+        "${PROJECT_SOURCE_DIR}/cmake/modules"
+        "${touchegg_SOURCE_DIR}/cmake/Modules")
 FetchContent_MakeAvailable(touchegg)
 
 
@@ -26,6 +28,7 @@ find_package(Xrandr REQUIRED)
 find_package(XInput REQUIRED)
 find_package(GLib REQUIRED)
 find_package(Gtk3 REQUIRED)
+find_package(LibPulse REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/src/*.h
@@ -47,7 +50,8 @@ target_include_directories(touchegg_music_client PUBLIC
         ${XRANDR_INCLUDE_DIRS}
         ${XINPUT_INCLUDE_DIRS}
         ${GLIB_INCLUDE_DIRS}
-        ${GTK3_INCLUDE_DIRS})
+        ${GTK3_INCLUDE_DIRS}
+        ${LIBPULSE_INCLUDE_DIRS})
 target_link_libraries(touchegg_music_client
         stdc++fs # std::filesystem
         Threads::Threads # std::thread
@@ -60,5 +64,6 @@ target_link_libraries(touchegg_music_client
         ${XRANDR_LIBRARIES}
         ${XINPUT_LIBRARIES}
         ${GLIB_LIBRARIES}
-        ${GTK3_LIBRARIES})
+        ${GTK3_LIBRARIES}
+        ${LIBPULSE_LIBRARIES})
 add_definitions(-DAUTO_COLORS=ON)
