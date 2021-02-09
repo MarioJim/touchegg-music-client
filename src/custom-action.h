@@ -5,6 +5,7 @@
 
 class CustomAction {
  public:
+  virtual ~CustomAction() = default;
   virtual void onGestureBegin(const Gesture &gesture) = 0;
   virtual void onGestureUpdate(const Gesture &gesture) = 0;
   virtual void onGestureEnd(const Gesture &gesture) = 0;

@@ -14,6 +14,7 @@ class PulseAudioAdapter {
   ~PulseAudioAdapter();
 
   void offset_volume(double delta_percentage);
+  double get_volume();
 
  private:
   pa_threaded_mainloop* mainloop{nullptr};

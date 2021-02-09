@@ -19,7 +19,7 @@ void CustomGestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
     switch (gesture->direction()) {
       case GestureDirection::UP:
       case GestureDirection::DOWN:
-        action = std::make_unique<OffsetVolumeAction>(adapter);
+        action = std::make_unique<OffsetVolumeAction>(adapter, window_system);
         break;
       case GestureDirection::LEFT:
       case GestureDirection::RIGHT:

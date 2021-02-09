@@ -94,18 +94,18 @@ void PulseAudioAdapter::offset_volume(double delta_percentage) {
   pa_threaded_mainloop_lock(mainloop);
 
   pa_volume_t delta_value = abs(delta_percentage) * PA_VOLUME_NORM / 100.0F;
-  pa_volume_t volume = std::clamp(delta_value, 0U, PA_VOLUME_NORM);
+  pa_volume_t delta_volume = std::clamp(delta_value, 0U, PA_VOLUME_NORM);
   if (delta_percentage > 0) {
     pa_volume_t current = pa_cvolume_max(&sink_volume);
-    if (current + volume <= PA_VOLUME_UI_MAX) {
-      pa_cvolume_inc(&sink_volume, volume);
+    if (current + delta_volume <= PA_VOLUME_UI_MAX) {
+      pa_cvolume_inc(&sink_volume, delta_volume);
     } else if (current < PA_VOLUME_UI_MAX) {
       pa_cvolume_scale(&sink_volume, PA_VOLUME_UI_MAX);
     } else {
       std::cout << "pulseaudio: maximum volume reached" << std::endl;
     }
   } else {
-    pa_cvolume_dec(&sink_volume, volume);
+    pa_cvolume_dec(&sink_volume, delta_volume);
   }
 
   auto success_callback = [](pa_context * /*context*/, int success_result,
@@ -125,4 +125,9 @@ void PulseAudioAdapter::offset_volume(double delta_percentage) {
   }
 
   pa_threaded_mainloop_unlock(mainloop);
+}
+
+double PulseAudioAdapter::get_volume() {
+  pa_volume_t volume = pa_cvolume_max(&sink_volume);
+  return volume * 100.0F / PA_VOLUME_NORM + 0.5F;
 }
