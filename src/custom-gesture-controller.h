@@ -1,13 +1,14 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_CUSTOM_GESTURE_CONTROLLER_H
 #define TOUCHEGG_MUSIC_CLIENT_CUSTOM_GESTURE_CONTROLLER_H
 
+#include "custom-action.h"
 #include "gesture-controller/gesture-controller-delegate.h"
 #include "pulseaudio-adapter.h"
 #include "window-system/window-system.h"
 
 class CustomGestureController : public GestureControllerDelegate {
  public:
-  explicit CustomGestureController(const PulseAudioAdapter &adapter,
+  explicit CustomGestureController(PulseAudioAdapter &adapter,
                                    const WindowSystem &window_system);
   ~CustomGestureController() override = default;
   void onGestureBegin(std::unique_ptr<Gesture> gesture) override;
@@ -15,8 +16,10 @@ class CustomGestureController : public GestureControllerDelegate {
   void onGestureEnd(std::unique_ptr<Gesture> gesture) override;
 
  private:
-  const PulseAudioAdapter &adapter;
+  PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
+
+  std::unique_ptr<CustomAction> action = nullptr;
 };
 
 #endif  // TOUCHEGG_MUSIC_CLIENT_CUSTOM_GESTURE_CONTROLLER_H

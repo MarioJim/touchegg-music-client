@@ -92,6 +92,7 @@ PulseAudioAdapter::~PulseAudioAdapter() {
 
 void PulseAudioAdapter::offset_volume(double delta_percentage) {
   pa_threaded_mainloop_lock(mainloop);
+
   pa_volume_t delta_value = abs(delta_percentage) * PA_VOLUME_NORM / 100.0F;
   pa_volume_t volume = std::clamp(delta_value, 0U, PA_VOLUME_NORM);
   if (delta_percentage > 0) {
@@ -106,6 +107,7 @@ void PulseAudioAdapter::offset_volume(double delta_percentage) {
   } else {
     pa_cvolume_dec(&sink_volume, volume);
   }
+
   auto success_callback = [](pa_context * /*context*/, int success_result,
                              void *userdata) {
     auto *adapter = static_cast<PulseAudioAdapter *>(userdata);
@@ -121,5 +123,6 @@ void PulseAudioAdapter::offset_volume(double delta_percentage) {
   if (success == 0) {
     throw std::runtime_error("Failed to set sink volume.");
   }
+
   pa_threaded_mainloop_unlock(mainloop);
 }
