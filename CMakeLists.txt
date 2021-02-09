@@ -3,18 +3,9 @@ project(touchegg_music_client VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include(FetchContent)
-FetchContent_Declare(
-        touchegg
-        GIT_REPOSITORY https://github.com/JoseExposito/touchegg.git
-        GIT_TAG 2.0.7
-        GIT_SHALLOW ON
-        PATCH_COMMAND patch --strip=1 --forward -i ${PROJECT_SOURCE_DIR}/touchegg_cmake_warnings.patch || true
-)
-list(APPEND CMAKE_MODULE_PATH
-        "${PROJECT_SOURCE_DIR}/cmake/modules"
-        "${touchegg_SOURCE_DIR}/cmake/Modules")
-FetchContent_MakeAvailable(touchegg)
+include(cmake/touchegg-dependency.cmake)
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     include(cmake/code-style.cmake)
@@ -35,10 +26,8 @@ find_package(LibPulse REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/src/*.h
-        ${touchegg_SOURCE_DIR}/src/*.h
-        ${PROJECT_SOURCE_DIR}/src/*.cpp
-        ${touchegg_SOURCE_DIR}/src/*.cpp)
-list(REMOVE_ITEM SOURCE_FILES "${touchegg_SOURCE_DIR}/src/main.cpp")
+        ${PROJECT_SOURCE_DIR}/src/*.cpp)
+list(APPEND SOURCE_FILES "${TOUCHEGG_SOURCE_FILES}")
 
 add_executable(touchegg_music_client ${SOURCE_FILES})
 target_include_directories(touchegg_music_client PUBLIC
