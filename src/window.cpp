@@ -1,13 +1,13 @@
-#include "volume-window.h"
+#include "window.h"
 
 #include <algorithm>
 #include <sstream>
 
-VolumeWindow::VolumeWindow(const WindowSystem& window_system)
+Window::Window(const WindowSystem& window_system)
     : cairo_surface(window_system.createCairoSurface()),
       monitor(window_system.getDesktopWorkarea()) {}
 
-void VolumeWindow::render(double volume_percentage) {
+void Window::render(double volume_percentage) {
   cairo_t* ctx = cairo_surface->getContext();
 
   // Clear the background

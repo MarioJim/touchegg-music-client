@@ -1,13 +1,13 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_OFFSET_VOLUME_ACTION_H
 #define TOUCHEGG_MUSIC_CLIENT_OFFSET_VOLUME_ACTION_H
 
-#include "custom-action.h"
+#include "action.h"
 #include "gesture/gesture.h"
 #include "pulseaudio-adapter.h"
 #include "utils/color.h"
-#include "volume-window.h"
+#include "window.h"
 
-class OffsetVolumeAction : public CustomAction {
+class OffsetVolumeAction : public Action {
  public:
   explicit OffsetVolumeAction(PulseAudioAdapter &adapter,
                               const WindowSystem &window_system);
@@ -18,7 +18,7 @@ class OffsetVolumeAction : public CustomAction {
  private:
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
-  std::unique_ptr<VolumeWindow> window = nullptr;
+  std::unique_ptr<Window> window = nullptr;
   double last_gesture_percentage = 0;
 };
 

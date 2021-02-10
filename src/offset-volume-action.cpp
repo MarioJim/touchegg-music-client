@@ -5,7 +5,7 @@ OffsetVolumeAction::OffsetVolumeAction(PulseAudioAdapter& adapter,
     : adapter(adapter), window_system(window_system) {}
 
 void OffsetVolumeAction::onGestureBegin(const Gesture& /*gesture*/) {
-  window = std::make_unique<VolumeWindow>(window_system);
+  window = std::make_unique<Window>(window_system);
 }
 
 void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {

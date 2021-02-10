@@ -1,13 +1,13 @@
-#include "custom-gesture-controller.h"
+#include "gesture-controller.h"
 
 #include "gesture/gesture.h"
 #include "offset-volume-action.h"
 
-CustomGestureController::CustomGestureController(
-    PulseAudioAdapter &adapter, const WindowSystem &window_system)
+GestureController::GestureController(PulseAudioAdapter &adapter,
+                                     const WindowSystem &window_system)
     : adapter(adapter), window_system(window_system) {}
 
-void CustomGestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
+void GestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
   std::cout << "Gesture begin detected" << std::endl;
   std::cout << "\tGesture information:" << std::endl;
   std::cout << "\t\tFingers: " << gesture->fingers() << std::endl;
@@ -36,8 +36,7 @@ void CustomGestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
   }
 }
 
-void CustomGestureController::onGestureUpdate(
-    std::unique_ptr<Gesture> gesture) {
+void GestureController::onGestureUpdate(std::unique_ptr<Gesture> gesture) {
   std::cout << "Gesture update detected (" << gesture->percentage() << "%)"
             << std::endl;
   if (action != nullptr) {
@@ -45,7 +44,7 @@ void CustomGestureController::onGestureUpdate(
   }
 }
 
-void CustomGestureController::onGestureEnd(std::unique_ptr<Gesture> gesture) {
+void GestureController::onGestureEnd(std::unique_ptr<Gesture> gesture) {
   std::cout << "Gesture end detected" << std::endl;
   if (action != nullptr) {
     action->onGestureEnd(*gesture);
