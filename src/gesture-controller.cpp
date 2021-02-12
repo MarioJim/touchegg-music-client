@@ -37,9 +37,9 @@ void GestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
 }
 
 void GestureController::onGestureUpdate(std::unique_ptr<Gesture> gesture) {
-  std::cout << "Gesture update detected (" << gesture->percentage() << "%)"
-            << std::endl;
   if (action != nullptr) {
+    std::cout << "Gesture update detected (" << gesture->percentage() << "%)"
+              << std::endl;
     action->onGestureUpdate(*gesture);
   }
 }
