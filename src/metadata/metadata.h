@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <tuple>
 #include <utility>
 
 class Metadata {
@@ -12,10 +13,8 @@ class Metadata {
         album(std::move(album)),
         artist(std::move(artist)) {}
 
-  friend std::ostream &operator<<(std::ostream &out, const Metadata &metadata) {
-    out << "Song: " << metadata.song << "\nAlbum: " << metadata.album
-        << "\nArtist: " << metadata.artist << std::endl;
-    return out;
+  std::tuple<std::string, std::string, std::string> toTuple() {
+    return std::make_tuple(song, album, artist);
   }
 
  private:
