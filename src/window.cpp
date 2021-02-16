@@ -1,13 +1,13 @@
 #include "window.h"
 
 #include <algorithm>
-#include <sstream>
 
 Window::Window(const WindowSystem& window_system)
     : cairo_surface(window_system.createCairoSurface()),
       monitor(window_system.getDesktopWorkarea()) {}
 
-void Window::render(double volume_percentage) {
+void Window::render(double volume_percentage,
+                    std::unique_ptr<Metadata> /*metadata*/) {
   cairo_t* ctx = cairo_surface->getContext();
 
   // Clear the background

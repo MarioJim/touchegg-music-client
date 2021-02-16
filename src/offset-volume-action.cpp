@@ -1,8 +1,9 @@
 #include "offset-volume-action.h"
 
-OffsetVolumeAction::OffsetVolumeAction(PulseAudioAdapter& adapter,
+OffsetVolumeAction::OffsetVolumeAction(MetadataProvider& provider,
+                                       PulseAudioAdapter& adapter,
                                        const WindowSystem& window_system)
-    : adapter(adapter), window_system(window_system) {}
+    : provider(provider), adapter(adapter), window_system(window_system) {}
 
 void OffsetVolumeAction::onGestureBegin(const Gesture& /*gesture*/) {
   window = std::make_unique<Window>(window_system);
@@ -15,7 +16,8 @@ void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
   adapter.offset_volume(delta_percentage);
 
   double new_volume = adapter.get_volume();
-  window->render(new_volume);
+  auto metadata = provider.getMetadata();
+  window->render(new_volume, std::move(metadata));
 
   last_gesture_percentage = gesture.percentage();
 }

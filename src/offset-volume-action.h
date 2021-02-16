@@ -3,19 +3,22 @@
 
 #include "action.h"
 #include "gesture/gesture.h"
+#include "metadata/metadata-provider.h"
 #include "pulseaudio-adapter.h"
 #include "utils/color.h"
 #include "window.h"
 
 class OffsetVolumeAction : public Action {
  public:
-  explicit OffsetVolumeAction(PulseAudioAdapter &adapter,
+  explicit OffsetVolumeAction(MetadataProvider &provider,
+                              PulseAudioAdapter &adapter,
                               const WindowSystem &window_system);
   void onGestureBegin(const Gesture &gesture) override;
   void onGestureUpdate(const Gesture &gesture) override;
   void onGestureEnd(const Gesture &gesture) override;
 
  private:
+  MetadataProvider &provider;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
   std::unique_ptr<Window> window = nullptr;
