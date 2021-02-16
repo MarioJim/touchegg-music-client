@@ -3,9 +3,10 @@
 #include "gesture/gesture.h"
 #include "offset-volume-action.h"
 
-GestureController::GestureController(PulseAudioAdapter &adapter,
+GestureController::GestureController(MetadataProvider &provider,
+                                     PulseAudioAdapter &adapter,
                                      const WindowSystem &window_system)
-    : adapter(adapter), window_system(window_system) {}
+    : provider(provider), adapter(adapter), window_system(window_system) {}
 
 void GestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
   std::cout << "Gesture begin detected" << std::endl;
@@ -19,7 +20,8 @@ void GestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
     switch (gesture->direction()) {
       case GestureDirection::UP:
       case GestureDirection::DOWN:
-        action = std::make_unique<OffsetVolumeAction>(adapter, window_system);
+        action = std::make_unique<OffsetVolumeAction>(provider, adapter,
+                                                      window_system);
         break;
       case GestureDirection::LEFT:
       case GestureDirection::RIGHT:
