@@ -26,8 +26,6 @@ void Window::render(double volume_percentage,
 
 void Window::renderMusicWindow(cairo_t* ctx,
                                std::unique_ptr<Metadata> metadata) {
-  auto [song_str, album_str, artist_str] = metadata->toTuple();
-
   double background_height = calculateIndicatorBackgroundHeight();
   double background_x = calculateIndicatorBackgroundX() +
                         calculateIndicatorBackgroundWidth() +
@@ -44,18 +42,31 @@ void Window::renderMusicWindow(cairo_t* ctx,
   cairo_set_source_rgba(ctx, 1, 1, 1, 1);
 
   // Write the song name
-  cairo_set_font_size(ctx, 36);
+  cairo_set_font_size(ctx, 32);
   double song_x = background_x + kMusicBackgroundHorizPadding;
   double song_y = background_y + kSongStringY;
   cairo_move_to(ctx, song_x, song_y);
-  cairo_show_text(ctx, song_str.c_str());
+  cairo_show_text(ctx, metadata->song.c_str());
 
   // Write the artist's name
   cairo_set_font_size(ctx, 20);
   double artist_x = background_x + kMusicBackgroundHorizPadding;
   double artist_y = background_y + kArtistStringY;
   cairo_move_to(ctx, artist_x, artist_y);
-  cairo_show_text(ctx, artist_str.c_str());
+  cairo_show_text(ctx, metadata->artist.c_str());
+
+  // Write the playback status
+  std::string playback_status_str =
+      playbackStatusToString(metadata->playback_status);
+  cairo_set_font_size(ctx, 16);
+  cairo_text_extents_t extents;
+  cairo_text_extents(ctx, playback_status_str.c_str(), &extents);
+  double playback_x = background_x + kMusicBackgroundWidth -
+                      kMusicBackgroundHorizPadding - extents.width +
+                      extents.height;
+  double playback_y = background_y + kMusicBackgroundHorizPadding;
+  cairo_move_to(ctx, playback_x, playback_y);
+  cairo_show_text(ctx, playback_status_str.c_str());
 }
 
 void Window::renderVolumeWindow(cairo_t* ctx, double volume_percentage) {

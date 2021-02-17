@@ -16,8 +16,10 @@ class SpotifyMetadataProvider : public MetadataProvider {
   bool initSpotifyProxy();
 
   bool isSpotifyDBusConnected();
+  GVariant *fetchMetadataGVariant();
+  GVariant *fetchPlaybackStatusGVariant();
   static std::unique_ptr<Metadata> parseMetadataFromGVariant(
-      GVariant *metadata_dict);
+      GVariant *metadata_dict, GVariant *playback_status_variant);
 
   GDBusProxy *spotify_proxy{nullptr};
 

@@ -22,26 +22,20 @@ std::unique_ptr<Metadata> SpotifyMetadataProvider::getMetadata() {
     }
   }
 
-  GError *tmp_error = nullptr;
-  GVariant *reply = g_dbus_proxy_call_sync(
-      spotify_proxy, "Get",
-      g_variant_new("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata"),
-      G_DBUS_CALL_FLAGS_NONE, -1, nullptr, &tmp_error);
-  if (tmp_error != nullptr) {
-    std::cout << "Error listing Spotify's metadata: " << tmp_error->message
-              << std::endl;
-    g_object_unref(spotify_proxy);
-    spotify_proxy = nullptr;
+  GVariant *metadata_dict = fetchMetadataGVariant();
+  GVariant *playback_variant = fetchPlaybackStatusGVariant();
+
+  if (metadata_dict == nullptr || playback_variant == nullptr) {
     return nullptr;
   }
 
-  GVariant *reply_child = g_variant_get_child_value(reply, 0);
-  GVariant *metadata_dict = g_variant_get_child_value(reply_child, 0);
+  std::unique_ptr<Metadata> metadata =
+      parseMetadataFromGVariant(metadata_dict, playback_variant);
 
-  g_variant_unref(reply);
-  g_variant_unref(reply_child);
+  g_variant_unref(metadata_dict);
+  g_variant_unref(playback_variant);
 
-  return parseMetadataFromGVariant(metadata_dict);
+  return metadata;
 }
 
 bool SpotifyMetadataProvider::initSpotifyProxy() {
@@ -99,7 +93,7 @@ bool SpotifyMetadataProvider::isSpotifyDBusConnected() {
 }
 
 std::unique_ptr<Metadata> SpotifyMetadataProvider::parseMetadataFromGVariant(
-    GVariant *metadata_dict) {
+    GVariant *metadata_dict, GVariant *playback_status_variant) {
   GVariant *song_variant = g_variant_lookup_value(metadata_dict, "xesam:title",
                                                   G_VARIANT_TYPE_STRING);
   std::string song;
@@ -129,7 +123,57 @@ std::unique_ptr<Metadata> SpotifyMetadataProvider::parseMetadataFromGVariant(
     g_variant_unref(artist_variant);
   }
 
-  g_variant_unref(metadata_dict);
+  std::string playback_status_str =
+      g_variant_get_string(playback_status_variant, nullptr);
+  PlaybackStatus playback_status =
+      playbackStatusFromString(playback_status_str);
 
-  return std::make_unique<Metadata>(song, album, artist);
+  return std::make_unique<Metadata>(song, album, artist, playback_status);
+}
+
+GVariant *SpotifyMetadataProvider::fetchMetadataGVariant() {
+  GError *tmp_error = nullptr;
+  GVariant *metadata_reply = g_dbus_proxy_call_sync(
+      spotify_proxy, "Get",
+      g_variant_new("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata"),
+      G_DBUS_CALL_FLAGS_NONE, -1, nullptr, &tmp_error);
+
+  if (tmp_error != nullptr) {
+    std::cout << "Error listing Spotify's metadata: " << tmp_error->message
+              << std::endl;
+    g_object_unref(spotify_proxy);
+    spotify_proxy = nullptr;
+    return nullptr;
+  }
+
+  GVariant *metadata_reply_child = g_variant_get_child_value(metadata_reply, 0);
+  GVariant *metadata_dict = g_variant_get_child_value(metadata_reply_child, 0);
+  g_variant_unref(metadata_reply);
+  g_variant_unref(metadata_reply_child);
+
+  return metadata_dict;
+}
+
+GVariant *SpotifyMetadataProvider::fetchPlaybackStatusGVariant() {
+  GError *tmp_error = nullptr;
+  GVariant *playback_reply = g_dbus_proxy_call_sync(
+      spotify_proxy, "Get",
+      g_variant_new("(ss)", "org.mpris.MediaPlayer2.Player", "PlaybackStatus"),
+      G_DBUS_CALL_FLAGS_NONE, -1, nullptr, &tmp_error);
+
+  if (tmp_error != nullptr) {
+    std::cout << "Error fetching Spotify's playback status: "
+              << tmp_error->message << std::endl;
+    g_object_unref(spotify_proxy);
+    spotify_proxy = nullptr;
+    return nullptr;
+  }
+
+  GVariant *playback_reply_child = g_variant_get_child_value(playback_reply, 0);
+  GVariant *playback_variant =
+      g_variant_get_child_value(playback_reply_child, 0);
+  g_variant_unref(playback_reply);
+  g_variant_unref(playback_reply_child);
+
+  return playback_variant;
 }
