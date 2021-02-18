@@ -24,51 +24,6 @@ void Window::render(double volume_percentage,
   cairo_surface->flush();
 }
 
-void Window::renderMusicWindow(cairo_t* ctx,
-                               std::unique_ptr<Metadata> metadata) {
-  double background_height = calculateIndicatorBackgroundHeight();
-  double background_x = calculateIndicatorBackgroundX() +
-                        calculateIndicatorBackgroundWidth() +
-                        kMarginBetweenWindows;
-  double background_y = calculateIndicatorBackgroundY();
-
-  // Draw the window background
-  cairo_rectangle(ctx, background_x, background_y, kMusicBackgroundWidth,
-                  background_height);
-  cairo_set_source_rgba(ctx, 0, 0, 0, 0.9);
-  cairo_fill(ctx);
-
-  // Set text color
-  cairo_set_source_rgba(ctx, 1, 1, 1, 1);
-
-  // Write the song name
-  cairo_set_font_size(ctx, 32);
-  double song_x = background_x + kMusicBackgroundHorizPadding;
-  double song_y = background_y + kSongStringY;
-  cairo_move_to(ctx, song_x, song_y);
-  cairo_show_text(ctx, metadata->song.c_str());
-
-  // Write the artist's name
-  cairo_set_font_size(ctx, 20);
-  double artist_x = background_x + kMusicBackgroundHorizPadding;
-  double artist_y = background_y + kArtistStringY;
-  cairo_move_to(ctx, artist_x, artist_y);
-  cairo_show_text(ctx, metadata->artist.c_str());
-
-  // Write the playback status
-  std::string playback_status_str =
-      playbackStatusToString(metadata->playback_status);
-  cairo_set_font_size(ctx, 16);
-  cairo_text_extents_t extents;
-  cairo_text_extents(ctx, playback_status_str.c_str(), &extents);
-  double playback_x = background_x + kMusicBackgroundWidth -
-                      kMusicBackgroundHorizPadding - extents.width +
-                      extents.height;
-  double playback_y = background_y + kMusicBackgroundHorizPadding;
-  cairo_move_to(ctx, playback_x, playback_y);
-  cairo_show_text(ctx, playback_status_str.c_str());
-}
-
 void Window::renderVolumeWindow(cairo_t* ctx, double volume_percentage) {
   double background_x = calculateIndicatorBackgroundX();
   double background_y = calculateIndicatorBackgroundY();
@@ -106,6 +61,77 @@ void Window::renderVolumeWindow(cairo_t* ctx, double volume_percentage) {
   cairo_set_source_rgba(ctx, 1, 1, 1, 1);
   cairo_move_to(ctx, txt_x, txt_y);
   cairo_show_text(ctx, volume_string.c_str());
+}
+
+void Window::renderMusicWindow(cairo_t* ctx,
+                               std::unique_ptr<Metadata> metadata) {
+  double background_height = calculateIndicatorBackgroundHeight();
+  double background_x = calculateIndicatorBackgroundX() +
+                        calculateIndicatorBackgroundWidth() +
+                        kMarginBetweenWindows;
+  double background_y = calculateIndicatorBackgroundY();
+
+  // Draw the window background
+  cairo_rectangle(ctx, background_x, background_y, kMusicBackgroundWidth,
+                  background_height);
+  cairo_set_source_rgba(ctx, 0, 0, 0, 0.9);
+  cairo_fill(ctx);
+
+  // Set text color
+  cairo_set_source_rgba(ctx, 1, 1, 1, 1);
+
+  // Write the song name
+  cairo_set_font_size(ctx, 32);
+  double song_x = background_x + kMusicBackgroundHorizPadding;
+  double song_y = background_y + kSongStringY;
+  cairo_move_to(ctx, song_x, song_y);
+  cairo_show_text(ctx, metadata->song.c_str());
+
+  // Write the artist's name
+  cairo_set_font_size(ctx, 20);
+  double artist_x = background_x + kMusicBackgroundHorizPadding;
+  double artist_y = background_y + kArtistStringY;
+  cairo_move_to(ctx, artist_x, artist_y);
+  cairo_show_text(ctx, metadata->artist.c_str());
+
+  // Display the playback status icon
+  renderPlaybackStatusIcon(ctx, metadata->playback_status, background_x,
+                           background_y);
+}
+
+void Window::renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
+                                      double music_window_x,
+                                      double music_window_y) const {
+  double startX = music_window_x + kMusicBackgroundWidth -
+                  kMusicBackgroundHorizPadding - kPlaybackIconSize;
+  double startY = music_window_y + kMusicBackgroundHorizPadding;
+  double pause_line_width = kPlaybackIconSize / 3.0;
+
+  cairo_set_source_rgba(ctx, 1, 1, 1, 1);
+
+  switch (status) {
+    case PlaybackStatus::PLAYING:
+      cairo_move_to(ctx, startX, startY);
+      cairo_rel_line_to(ctx, 0.0, kPlaybackIconSize);
+      cairo_rel_line_to(ctx, kPlaybackIconSize * 0.9, -kPlaybackIconSize / 2);
+      cairo_close_path(ctx);
+      cairo_fill(ctx);
+      break;
+    case PlaybackStatus::PAUSED:
+      cairo_rectangle(ctx, startX, startY, pause_line_width, kPlaybackIconSize);
+      cairo_fill(ctx);
+      cairo_rectangle(ctx, startX + 2 * pause_line_width, startY,
+                      pause_line_width, kPlaybackIconSize);
+      cairo_fill(ctx);
+      break;
+    case PlaybackStatus::STOPPED:
+      cairo_rectangle(ctx, startX, startY, kPlaybackIconSize,
+                      kPlaybackIconSize);
+      cairo_fill(ctx);
+      break;
+    default:
+      break;
+  };
 }
 
 double Window::calculateIndicatorY(double percentage) const {

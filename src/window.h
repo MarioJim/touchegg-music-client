@@ -18,8 +18,11 @@ class Window {
   void render(double volume_percentage, std::unique_ptr<Metadata> metadata);
 
  private:
-  void renderMusicWindow(cairo_t* ctx, std::unique_ptr<Metadata> metadata);
   void renderVolumeWindow(cairo_t* ctx, double volume_percentage);
+  void renderMusicWindow(cairo_t* ctx, std::unique_ptr<Metadata> metadata);
+  void renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
+                                double music_window_x,
+                                double music_window_y) const;
 
   [[nodiscard]] inline double calculateIndicatorY(double percentage) const;
   static inline double calculateIndicatorHeight(double percentage);
@@ -42,6 +45,7 @@ class Window {
   const double kMusicBackgroundHorizPadding = 30;
   const double kSongStringY = 92;
   const double kArtistStringY = kSongStringY + 30;
+  const double kPlaybackIconSize = 20;
 };
 
 #endif  // TOUCHEGG_MUSIC_CLIENT_WINDOW_H

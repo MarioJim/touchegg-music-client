@@ -8,19 +8,16 @@
 
 #include "metadata/playback-status.h"
 
-class Metadata {
- public:
-  explicit Metadata(std::string song, std::string album, std::string artist,
-                    PlaybackStatus status)
+struct Metadata {
+  const std::string song, album, artist;
+  const PlaybackStatus playback_status;
+
+  Metadata(std::string song, std::string album, std::string artist,
+           PlaybackStatus status)
       : song(std::move(song)),
         album(std::move(album)),
         artist(std::move(artist)),
         playback_status(status) {}
-
-  const std::string song;
-  const std::string album;
-  const std::string artist;
-  const PlaybackStatus playback_status;
 };
 
 #endif  // TOUCHEGG_MUSIC_CLIENT_METADATA_H
