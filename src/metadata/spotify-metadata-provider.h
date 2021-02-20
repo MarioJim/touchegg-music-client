@@ -3,12 +3,15 @@
 
 #include <gio/gio.h>
 
+#include <memory>
+#include <string>
+
 #include "metadata/metadata-provider.h"
 #include "metadata/metadata.h"
 
 class SpotifyMetadataProvider : public MetadataProvider {
  public:
-  explicit SpotifyMetadataProvider();
+  SpotifyMetadataProvider();
   ~SpotifyMetadataProvider();
   std::unique_ptr<Metadata> getMetadata() override;
 

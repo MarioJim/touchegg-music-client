@@ -1,7 +1,8 @@
 #include "window.h"
 
 #include <algorithm>
-#include <iostream>
+#include <string>
+#include <utility>
 
 Window::Window(const WindowSystem& window_system)
     : cairo_surface(window_system.createCairoSurface()),
@@ -131,7 +132,7 @@ void Window::renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
       break;
     default:
       break;
-  };
+  }
 }
 
 double Window::calculateIndicatorY(double percentage) const {

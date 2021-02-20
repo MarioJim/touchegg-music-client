@@ -1,6 +1,8 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_OFFSET_VOLUME_ACTION_H
 #define TOUCHEGG_MUSIC_CLIENT_OFFSET_VOLUME_ACTION_H
 
+#include <memory>
+
 #include "action.h"
 #include "gesture/gesture.h"
 #include "metadata/metadata-provider.h"

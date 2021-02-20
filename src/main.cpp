@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "daemon/daemon-client.h"
 #include "gesture-controller.h"
 #include "metadata/metadata-provider.h"

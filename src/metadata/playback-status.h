@@ -1,6 +1,8 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_PLAYBACK_STATUS_H
 #define TOUCHEGG_MUSIC_CLIENT_PLAYBACK_STATUS_H
 
+#include <string>
+
 enum class PlaybackStatus {
   PLAYING,
   PAUSED,

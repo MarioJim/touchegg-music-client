@@ -10,7 +10,7 @@
  */
 class PulseAudioAdapter {
  public:
-  explicit PulseAudioAdapter();
+  PulseAudioAdapter();
   ~PulseAudioAdapter();
 
   void offset_volume(double delta_percentage);

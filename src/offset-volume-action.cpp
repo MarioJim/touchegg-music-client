@@ -1,5 +1,7 @@
 #include "offset-volume-action.h"
 
+#include <utility>
+
 OffsetVolumeAction::OffsetVolumeAction(MetadataProvider& provider,
                                        PulseAudioAdapter& adapter,
                                        const WindowSystem& window_system)

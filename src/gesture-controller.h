@@ -1,6 +1,8 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_GESTURE_CONTROLLER_H
 #define TOUCHEGG_MUSIC_CLIENT_GESTURE_CONTROLLER_H
 
+#include <memory>
+
 #include "action.h"
 #include "gesture-controller/gesture-controller-delegate.h"
 #include "metadata/metadata-provider.h"

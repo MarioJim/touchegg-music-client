@@ -25,7 +25,7 @@ void GestureController::onGestureBegin(std::unique_ptr<Gesture> gesture) {
         break;
       case GestureDirection::LEFT:
       case GestureDirection::RIGHT:
-        // TODO: Implement song changing action
+        // TODO(mario): Implement song changing action
         break;
       case GestureDirection::UNKNOWN:
       case GestureDirection::IN:
