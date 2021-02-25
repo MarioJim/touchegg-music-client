@@ -2,10 +2,9 @@ include(FetchContent)
 
 FetchContent_Declare(touchegg
         GIT_REPOSITORY https://github.com/JoseExposito/touchegg.git
-        GIT_TAG 2.0.7
+        GIT_TAG 2.0.8
         GIT_SHALLOW ON
         GIT_PROGRESS ON
-        PATCH_COMMAND patch --strip=1 --forward -i "${PROJECT_SOURCE_DIR}/cmake/touchegg_cmake_warnings.patch" || true
 )
 list(APPEND CMAKE_MODULE_PATH "${touchegg_SOURCE_DIR}/cmake/Modules")
 FetchContent_MakeAvailable(touchegg)
