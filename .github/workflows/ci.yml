@@ -11,14 +11,19 @@ on:
 jobs:
   cmake:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        container: [
+            "mariojim/touchegg-music-client-deps:debian",
+            "mariojim/touchegg-music-client-deps:archlinux"
+        ]
+
+    container:
+      image: ${{ matrix.container }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -yq gdb debhelper libudev-dev libinput-dev libpugixml-dev libcairo2-dev libx11-dev libxtst-dev libxrandr-dev libxi-dev libglib2.0-dev libgtk-3-dev libpulse-dev clang-format clang-tidy
 
       - name: Run CMake
         run: |
