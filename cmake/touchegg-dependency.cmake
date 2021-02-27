@@ -6,8 +6,10 @@ FetchContent_Declare(touchegg
         GIT_SHALLOW ON
         GIT_PROGRESS ON
 )
-list(APPEND CMAKE_MODULE_PATH "${touchegg_SOURCE_DIR}/cmake/Modules")
 FetchContent_MakeAvailable(touchegg)
+
+set_target_properties(touchegg PROPERTIES EXCLUDE_FROM_ALL 1)
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY 1)
 
 set(TOUCHEGG_SOURCE_FILES
         "${touchegg_SOURCE_DIR}/src/actions/action-direction.h"

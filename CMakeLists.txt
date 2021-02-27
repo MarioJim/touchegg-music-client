@@ -5,7 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(cmake/touchegg-dependency.cmake)
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
+list(APPEND CMAKE_MODULE_PATH
+    "${PROJECT_SOURCE_DIR}/cmake/modules"
+    "${touchegg_SOURCE_DIR}/cmake/Modules")
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     include(cmake/code-style.cmake)
