@@ -22,7 +22,5 @@ jobs:
 
       - name: Run CMake
         run: |
-          mkdir build
-          cmake -Bbuild -H. -DCMAKE_BUILD_TYPE=Debug || true
-          cmake -Bbuild -H. -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build/ --target touchegg_music_client
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Debug
+          make -C build
