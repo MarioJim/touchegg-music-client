@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(touchegg_music_client VERSION 0.0.1)
+project(touchegg-music-client VERSION 0.1.2)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -31,8 +31,8 @@ file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/src/*.cpp)
 list(APPEND SOURCE_FILES "${TOUCHEGG_SOURCE_FILES}")
 
-add_executable(touchegg_music_client ${SOURCE_FILES})
-target_include_directories(touchegg_music_client PUBLIC
+add_executable(touchegg-music-client ${SOURCE_FILES})
+target_include_directories(touchegg-music-client PUBLIC
         ${PROJECT_SOURCE_DIR}/src
         ${touchegg_SOURCE_DIR}/src
         ${LIBUDEV_INCLUDE_DIRS}
@@ -46,7 +46,7 @@ target_include_directories(touchegg_music_client PUBLIC
         ${GLIB_INCLUDE_DIRS}
         ${GTK3_INCLUDE_DIRS}
         ${LIBPULSE_INCLUDE_DIRS})
-target_link_libraries(touchegg_music_client
+target_link_libraries(touchegg-music-client
         stdc++fs # std::filesystem
         Threads::Threads # std::thread
         ${LIBUDEV_LIBRARIES}
