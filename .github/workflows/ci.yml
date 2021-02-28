@@ -9,8 +9,9 @@ on:
       - '*'
 
 jobs:
-  cmake:
+  build:
     runs-on: ubuntu-20.04
+
     strategy:
       matrix:
         container: [
@@ -29,3 +30,18 @@ jobs:
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Debug
           make -C build
+
+  formatter:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yq clang-format
+
+      - name: Run clang-format
+        run: clang-format --Werror --dry-run --style=file src/**/*.h src/**/*.cpp
