@@ -81,19 +81,22 @@ void Window::renderMusicWindow(cairo_t* ctx,
   // Set text color
   cairo_set_source_rgba(ctx, 1, 1, 1, 1);
 
+  double max_text_width = kMusicBackgroundWidth - 2 * kMusicBackgroundHorizPadding;
   // Write the song name
   cairo_set_font_size(ctx, 32);
+  std::string song = trimText(ctx, metadata->song, max_text_width);
   double song_x = background_x + kMusicBackgroundHorizPadding;
   double song_y = background_y + kSongStringY;
   cairo_move_to(ctx, song_x, song_y);
-  cairo_show_text(ctx, metadata->song.c_str());
+  cairo_show_text(ctx, song.c_str());
 
   // Write the artist's name
   cairo_set_font_size(ctx, 20);
+  std::string artist = trimText(ctx, metadata->artist, max_text_width);
   double artist_x = background_x + kMusicBackgroundHorizPadding;
   double artist_y = background_y + kArtistStringY;
   cairo_move_to(ctx, artist_x, artist_y);
-  cairo_show_text(ctx, metadata->artist.c_str());
+  cairo_show_text(ctx, artist.c_str());
 
   // Display the playback status icon
   renderPlaybackStatusIcon(ctx, metadata->playback_status, background_x,
@@ -156,4 +159,32 @@ double Window::calculateIndicatorBackgroundWidth() const {
 double Window::calculateIndicatorBackgroundHeight() const {
   return calculateIndicatorHeight(100) + kIndicatorBackgroundTopMargin +
          kIndicatorBackgroundBottomMargin;
+}
+
+std::string Window::trimText(cairo_t* ctx, std::string text, double max_width) {
+  cairo_text_extents_t extents;
+
+  cairo_text_extents(ctx, text.c_str(), &extents);
+  double text_width = extents.width;
+
+  if (text_width < max_width) {
+    return text;
+  }
+
+  cairo_text_extents(ctx, kEllipsis, &extents);
+  double ellipsis_width = extents.width;
+  max_width -= ellipsis_width;
+
+  int chars_to_keep = static_cast<int>(max_width * text.size() / text_width);
+  std::string cropped_text = text.substr(0, chars_to_keep);
+  cairo_text_extents(ctx, cropped_text.c_str(), &extents);
+  double cropped_text_width = extents.width;
+
+  while (cropped_text_width > max_width) {
+    cropped_text.pop_back();
+    cairo_text_extents(ctx, cropped_text.c_str(), &extents);
+    cropped_text_width = extents.width;
+  }
+
+  return cropped_text.append(kEllipsis);
 }
