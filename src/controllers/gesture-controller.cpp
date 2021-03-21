@@ -1,9 +1,9 @@
 #include "gesture-controller.h"
 
+#include "action/offset-volume-action.h"
 #include "gesture/gesture.h"
-#include "offset-volume-action.h"
 
-GestureController::GestureController(MetadataProvider &provider,
+GestureController::GestureController(BaseMetadataProvider &provider,
                                      PulseAudioAdapter &adapter,
                                      const WindowSystem &window_system)
     : provider(provider), adapter(adapter), window_system(window_system) {}

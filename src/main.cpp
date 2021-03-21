@@ -1,14 +1,14 @@
 #include <memory>
 
+#include "controllers/gesture-controller.h"
 #include "daemon/daemon-client.h"
-#include "gesture-controller.h"
-#include "metadata/metadata-provider.h"
-#include "pulseaudio-adapter.h"
+#include "metadata-providers/base-metadata-provider.h"
+#include "pulseaudio/pulseaudio-adapter.h"
 #include "window-system/x11.h"
 
 int main() {
-  std::unique_ptr<MetadataProvider> provider =
-      MetadataProvider::selectMetadataProvider();
+  std::unique_ptr<BaseMetadataProvider> provider =
+      BaseMetadataProvider::selectMetadataProvider();
   PulseAudioAdapter adapter;
   X11 window_system;
 

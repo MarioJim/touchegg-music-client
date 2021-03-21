@@ -3,24 +3,23 @@
 
 #include <memory>
 
-#include "action.h"
+#include "action/action.h"
 #include "gesture-controller/gesture-controller-delegate.h"
-#include "metadata/metadata-provider.h"
-#include "pulseaudio-adapter.h"
+#include "metadata-providers/base-metadata-provider.h"
+#include "pulseaudio/pulseaudio-adapter.h"
 #include "window-system/window-system.h"
 
 class GestureController : public GestureControllerDelegate {
  public:
-  explicit GestureController(MetadataProvider &provider,
+  explicit GestureController(BaseMetadataProvider &provider,
                              PulseAudioAdapter &adapter,
                              const WindowSystem &window_system);
-  ~GestureController() override = default;
   void onGestureBegin(std::unique_ptr<Gesture> gesture) override;
   void onGestureUpdate(std::unique_ptr<Gesture> gesture) override;
   void onGestureEnd(std::unique_ptr<Gesture> gesture) override;
 
  private:
-  MetadataProvider &provider;
+  BaseMetadataProvider &provider;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
 

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-OffsetVolumeAction::OffsetVolumeAction(MetadataProvider& provider,
+OffsetVolumeAction::OffsetVolumeAction(BaseMetadataProvider& provider,
                                        PulseAudioAdapter& adapter,
                                        const WindowSystem& window_system)
     : provider(provider), adapter(adapter), window_system(window_system) {}

@@ -81,7 +81,8 @@ void Window::renderMusicWindow(cairo_t* ctx,
   // Set text color
   cairo_set_source_rgba(ctx, 1, 1, 1, 1);
 
-  double max_text_width = kMusicBackgroundWidth - 2 * kMusicBackgroundHorizPadding;
+  double max_text_width =
+      kMusicBackgroundWidth - 2 * kMusicBackgroundHorizPadding;
   // Write the song name
   cairo_set_font_size(ctx, 32);
   std::string song = trimText(ctx, metadata->song, max_text_width);
