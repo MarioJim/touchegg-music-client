@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-#include "base-metadata-provider.h"
+#include "metadata-providers/base-metadata-provider.h"
 #include "metadata/metadata.h"
 
 class SpotifyMetadataProvider : public BaseMetadataProvider {

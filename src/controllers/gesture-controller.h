@@ -12,7 +12,7 @@
 
 class GestureController : public GestureControllerDelegate {
  public:
-  explicit GestureController(MetadataController &metadata_controller,
+  explicit GestureController(const MetadataController &metadata_controller,
                              PulseAudioAdapter &adapter,
                              const WindowSystem &window_system);
   void onGestureBegin(std::unique_ptr<Gesture> gesture) override;
@@ -20,7 +20,7 @@ class GestureController : public GestureControllerDelegate {
   void onGestureEnd(std::unique_ptr<Gesture> gesture) override;
 
  private:
-  MetadataController &metadata_controller;
+  const MetadataController &metadata_controller;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
 

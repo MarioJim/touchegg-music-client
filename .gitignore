@@ -36,3 +36,5 @@
 
 # CMake debug files
 /cmake-build-debug
+
+cpplint.py

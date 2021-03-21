@@ -1,7 +1,6 @@
-#include "window.h"
+#include "window/window.h"
 
 #include <algorithm>
-#include <string>
 #include <utility>
 
 Window::Window(const WindowSystem& window_system)

@@ -1,10 +1,10 @@
-#include "gesture-controller.h"
+#include "controllers/gesture-controller.h"
 
 #include "action/offset-volume-action.h"
 
-GestureController::GestureController(MetadataController &metadata_controller,
-                                     PulseAudioAdapter &adapter,
-                                     const WindowSystem &window_system)
+GestureController::GestureController(
+    const MetadataController &metadata_controller, PulseAudioAdapter &adapter,
+    const WindowSystem &window_system)
     : metadata_controller(metadata_controller),
       adapter(adapter),
       window_system(window_system) {}

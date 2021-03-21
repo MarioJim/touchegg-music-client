@@ -4,6 +4,7 @@
 #include <cairo.h>
 
 #include <memory>
+#include <string>
 #include <tuple>
 
 #include "metadata/metadata.h"

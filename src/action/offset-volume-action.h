@@ -12,7 +12,7 @@
 
 class OffsetVolumeAction : public Action {
  public:
-  explicit OffsetVolumeAction(MetadataController &metadata_controller,
+  explicit OffsetVolumeAction(const MetadataController &metadata_controller,
                               PulseAudioAdapter &adapter,
                               const WindowSystem &window_system);
   void onGestureBegin(const Gesture &gesture) override;
@@ -20,7 +20,7 @@ class OffsetVolumeAction : public Action {
   void onGestureEnd(const Gesture &gesture) override;
 
  private:
-  MetadataController &metadata_controller;
+  const MetadataController &metadata_controller;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
   std::unique_ptr<Window> window = nullptr;

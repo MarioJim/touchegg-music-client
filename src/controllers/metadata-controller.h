@@ -1,6 +1,7 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_METADATA_CONTROLLER_H
 #define TOUCHEGG_MUSIC_CLIENT_METADATA_CONTROLLER_H
 
+#include <memory>
 #include <vector>
 
 #include "metadata-providers/base-metadata-provider.h"
@@ -9,7 +10,7 @@
 class MetadataController {
  public:
   explicit MetadataController();
-  std::unique_ptr<Metadata> getMetadata();
+  [[nodiscard]] std::unique_ptr<Metadata> getMetadata() const;
 
  private:
   std::vector<std::unique_ptr<BaseMetadataProvider>> providers;

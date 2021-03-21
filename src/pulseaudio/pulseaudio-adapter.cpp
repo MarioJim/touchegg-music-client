@@ -1,4 +1,4 @@
-#include "pulseaudio-adapter.h"
+#include "pulseaudio/pulseaudio-adapter.h"
 
 #include <pulse/pulseaudio.h>
 

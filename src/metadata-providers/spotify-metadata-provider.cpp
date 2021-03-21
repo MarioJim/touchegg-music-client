@@ -1,4 +1,4 @@
-#include "spotify-metadata-provider.h"
+#include "metadata-providers/spotify-metadata-provider.h"
 
 #include <iostream>
 
