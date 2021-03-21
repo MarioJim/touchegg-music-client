@@ -4,14 +4,15 @@
 #include <memory>
 
 #include "action/action.h"
+#include "controllers/metadata-controller.h"
 #include "gesture-controller/gesture-controller-delegate.h"
-#include "metadata-providers/base-metadata-provider.h"
+#include "gesture/gesture.h"
 #include "pulseaudio/pulseaudio-adapter.h"
 #include "window-system/window-system.h"
 
 class GestureController : public GestureControllerDelegate {
  public:
-  explicit GestureController(BaseMetadataProvider &provider,
+  explicit GestureController(MetadataController &metadata_controller,
                              PulseAudioAdapter &adapter,
                              const WindowSystem &window_system);
   void onGestureBegin(std::unique_ptr<Gesture> gesture) override;
@@ -19,7 +20,7 @@ class GestureController : public GestureControllerDelegate {
   void onGestureEnd(std::unique_ptr<Gesture> gesture) override;
 
  private:
-  BaseMetadataProvider &provider;
+  MetadataController &metadata_controller;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
 

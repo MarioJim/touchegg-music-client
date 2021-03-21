@@ -3,16 +3,16 @@
 
 #include <memory>
 
-#include "action.h"
+#include "action/action.h"
+#include "controllers/metadata-controller.h"
 #include "gesture/gesture.h"
-#include "metadata-providers/base-metadata-provider.h"
 #include "pulseaudio/pulseaudio-adapter.h"
 #include "utils/color.h"
 #include "window/window.h"
 
 class OffsetVolumeAction : public Action {
  public:
-  explicit OffsetVolumeAction(BaseMetadataProvider &provider,
+  explicit OffsetVolumeAction(MetadataController &metadata_controller,
                               PulseAudioAdapter &adapter,
                               const WindowSystem &window_system);
   void onGestureBegin(const Gesture &gesture) override;
@@ -20,7 +20,7 @@ class OffsetVolumeAction : public Action {
   void onGestureEnd(const Gesture &gesture) override;
 
  private:
-  BaseMetadataProvider &provider;
+  MetadataController &metadata_controller;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
   std::unique_ptr<Window> window = nullptr;
