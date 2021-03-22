@@ -9,7 +9,7 @@
 
 class MetadataController {
  public:
-  explicit MetadataController();
+  MetadataController();
   [[nodiscard]] std::unique_ptr<Metadata> getMetadata() const;
 
  private:

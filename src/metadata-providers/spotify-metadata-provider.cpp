@@ -1,11 +1,36 @@
 #include "metadata-providers/spotify-metadata-provider.h"
 
 #include <iostream>
+#include <thread>
 
 SpotifyMetadataProvider::SpotifyMetadataProvider() {
-  if (isSpotifyDBusConnected()) {
-    initSpotifyProxy();
-  }
+  initSpotifyProxy();
+
+  std::thread updateSpotifyMetadata{[this]() {
+    while (true) {
+      if (this->spotify_proxy == nullptr && !this->initSpotifyProxy()) {
+        return;
+      }
+
+      GVariant *metadata_dict = this->fetchMetadataGVariant();
+      GVariant *playback_variant = this->fetchPlaybackStatusGVariant();
+
+      if (metadata_dict == nullptr || playback_variant == nullptr) {
+        return;
+      }
+
+      std::unique_lock lock(this->metadata_mutex);
+      this->metadata = SpotifyMetadataProvider::parseMetadataFromGVariant(
+          metadata_dict, playback_variant);
+      lock.unlock();
+
+      g_variant_unref(metadata_dict);
+      g_variant_unref(playback_variant);
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+  }};
+  updateSpotifyMetadata.detach();
 }
 
 SpotifyMetadataProvider::~SpotifyMetadataProvider() {
@@ -15,30 +40,14 @@ SpotifyMetadataProvider::~SpotifyMetadataProvider() {
 }
 
 std::unique_ptr<Metadata> SpotifyMetadataProvider::getMetadata() {
-  if (spotify_proxy == nullptr) {
-    bool was_spotify_proxy_created = initSpotifyProxy();
-    if (!was_spotify_proxy_created) {
-      return nullptr;
-    }
-  }
-
-  GVariant *metadata_dict = fetchMetadataGVariant();
-  GVariant *playback_variant = fetchPlaybackStatusGVariant();
-
-  if (metadata_dict == nullptr || playback_variant == nullptr) {
-    return nullptr;
-  }
-
-  std::unique_ptr<Metadata> metadata =
-      parseMetadataFromGVariant(metadata_dict, playback_variant);
-
-  g_variant_unref(metadata_dict);
-  g_variant_unref(playback_variant);
-
-  return metadata;
+  std::shared_lock lock(metadata_mutex);
+  return std::make_unique<Metadata>(*metadata);
 }
 
 bool SpotifyMetadataProvider::initSpotifyProxy() {
+  if (!isSpotifyDBusConnected()) {
+    return false;
+  }
   GError *tmp_error = nullptr;
   spotify_proxy = g_dbus_proxy_new_for_bus_sync(
       G_BUS_TYPE_SESSION, G_DBUS_PROXY_FLAGS_NONE, nullptr,

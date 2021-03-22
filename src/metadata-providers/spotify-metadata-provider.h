@@ -4,6 +4,7 @@
 #include <gio/gio.h>
 
 #include <memory>
+#include <shared_mutex>
 #include <string>
 
 #include "metadata-providers/base-metadata-provider.h"
@@ -17,7 +18,6 @@ class SpotifyMetadataProvider : public BaseMetadataProvider {
 
  private:
   bool initSpotifyProxy();
-
   bool isSpotifyDBusConnected();
   GVariant *fetchMetadataGVariant();
   GVariant *fetchPlaybackStatusGVariant();
@@ -25,6 +25,8 @@ class SpotifyMetadataProvider : public BaseMetadataProvider {
       GVariant *metadata_dict, GVariant *playback_status_variant);
 
   GDBusProxy *spotify_proxy{nullptr};
+  std::shared_mutex metadata_mutex;
+  std::unique_ptr<Metadata> metadata;
 
   const char *const kSpotifyDBusName{"org.mpris.MediaPlayer2.spotify"};
 };
