@@ -1,9 +1,9 @@
-#include "metadata-providers/spotify-metadata-provider.h"
+#include "metadata-providers/spotify-polling-provider.h"
 
 #include <iostream>
 #include <thread>
 
-SpotifyMetadataProvider::SpotifyMetadataProvider() {
+SpotifyPollingProvider::SpotifyPollingProvider() {
   initSpotifyProxy();
 
   std::thread update_spotify_metadata_thread{[this]() {
@@ -20,7 +20,7 @@ SpotifyMetadataProvider::SpotifyMetadataProvider() {
       }
 
       std::unique_lock lock(this->metadata_mutex);
-      this->metadata = SpotifyMetadataProvider::parseMetadataFromGVariant(
+      this->metadata = SpotifyPollingProvider::parseMetadataFromGVariant(
           metadata_dict, playback_variant);
       lock.unlock();
 
@@ -33,18 +33,18 @@ SpotifyMetadataProvider::SpotifyMetadataProvider() {
   update_spotify_metadata_thread.detach();
 }
 
-SpotifyMetadataProvider::~SpotifyMetadataProvider() {
+SpotifyPollingProvider::~SpotifyPollingProvider() {
   if (spotify_proxy != nullptr) {
     g_object_unref(spotify_proxy);
   }
 }
 
-std::unique_ptr<Metadata> SpotifyMetadataProvider::getMetadata() {
+std::unique_ptr<Metadata> SpotifyPollingProvider::getMetadata() {
   std::shared_lock lock(metadata_mutex);
   return std::make_unique<Metadata>(*metadata);
 }
 
-bool SpotifyMetadataProvider::initSpotifyProxy() {
+bool SpotifyPollingProvider::initSpotifyProxy() {
   if (!isSpotifyDBusConnected()) {
     return false;
   }
@@ -61,7 +61,7 @@ bool SpotifyMetadataProvider::initSpotifyProxy() {
   return true;
 }
 
-bool SpotifyMetadataProvider::isSpotifyDBusConnected() {
+bool SpotifyPollingProvider::isSpotifyDBusConnected() {
   GError *tmp_error = nullptr;
   GDBusProxy *dbus_proxy = g_dbus_proxy_new_for_bus_sync(
       G_BUS_TYPE_SESSION, G_DBUS_PROXY_FLAGS_NONE, nullptr,
@@ -101,7 +101,7 @@ bool SpotifyMetadataProvider::isSpotifyDBusConnected() {
   return spotify_bus_found;
 }
 
-std::unique_ptr<Metadata> SpotifyMetadataProvider::parseMetadataFromGVariant(
+std::unique_ptr<Metadata> SpotifyPollingProvider::parseMetadataFromGVariant(
     GVariant *metadata_dict, GVariant *playback_status_variant) {
   GVariant *song_variant = g_variant_lookup_value(metadata_dict, "xesam:title",
                                                   G_VARIANT_TYPE_STRING);
@@ -140,7 +140,7 @@ std::unique_ptr<Metadata> SpotifyMetadataProvider::parseMetadataFromGVariant(
   return std::make_unique<Metadata>(song, album, artist, playback_status);
 }
 
-GVariant *SpotifyMetadataProvider::fetchMetadataGVariant() {
+GVariant *SpotifyPollingProvider::fetchMetadataGVariant() {
   GError *tmp_error = nullptr;
   GVariant *metadata_reply = g_dbus_proxy_call_sync(
       spotify_proxy, "Get",
@@ -163,7 +163,7 @@ GVariant *SpotifyMetadataProvider::fetchMetadataGVariant() {
   return metadata_dict;
 }
 
-GVariant *SpotifyMetadataProvider::fetchPlaybackStatusGVariant() {
+GVariant *SpotifyPollingProvider::fetchPlaybackStatusGVariant() {
   GError *tmp_error = nullptr;
   GVariant *playback_reply = g_dbus_proxy_call_sync(
       spotify_proxy, "Get",
