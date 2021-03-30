@@ -1,5 +1,5 @@
-#ifndef TOUCHEGG_MUSIC_CLIENT_SPOTIFY_METADATA_PROVIDER_H
-#define TOUCHEGG_MUSIC_CLIENT_SPOTIFY_METADATA_PROVIDER_H
+#ifndef TOUCHEGG_MUSIC_CLIENT_SPOTIFY_POLLING_PROVIDER_H
+#define TOUCHEGG_MUSIC_CLIENT_SPOTIFY_POLLING_PROVIDER_H
 
 #include <gio/gio.h>
 
@@ -10,10 +10,10 @@
 #include "metadata-providers/base-metadata-provider.h"
 #include "metadata/metadata.h"
 
-class SpotifyMetadataProvider : public BaseMetadataProvider {
+class SpotifyPollingProvider : public BaseMetadataProvider {
  public:
-  SpotifyMetadataProvider();
-  ~SpotifyMetadataProvider();
+  SpotifyPollingProvider();
+  ~SpotifyPollingProvider();
   std::unique_ptr<Metadata> getMetadata() override;
 
  private:
@@ -31,4 +31,4 @@ class SpotifyMetadataProvider : public BaseMetadataProvider {
   const char *const kSpotifyDBusName{"org.mpris.MediaPlayer2.spotify"};
 };
 
-#endif  // TOUCHEGG_MUSIC_CLIENT_SPOTIFY_METADATA_PROVIDER_H
+#endif  // TOUCHEGG_MUSIC_CLIENT_SPOTIFY_POLLING_PROVIDER_H
