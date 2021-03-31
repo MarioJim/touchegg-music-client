@@ -25,6 +25,7 @@ find_package(XINPUT REQUIRED)
 find_package(GLIB REQUIRED)
 find_package(GTK3 REQUIRED)
 find_package(LibPulse REQUIRED)
+find_package(DBus REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/src/*.h
@@ -45,7 +46,8 @@ target_include_directories(touchegg-music-client PUBLIC
         ${XINPUT_INCLUDE_DIRS}
         ${GLIB_INCLUDE_DIRS}
         ${GTK3_INCLUDE_DIRS}
-        ${LIBPULSE_INCLUDE_DIRS})
+        ${LIBPULSE_INCLUDE_DIRS}
+        ${DBUS_INCLUDE_DIRS})
 target_link_libraries(touchegg-music-client
         stdc++fs # std::filesystem
         Threads::Threads # std::thread
@@ -59,5 +61,6 @@ target_link_libraries(touchegg-music-client
         ${XINPUT_LIBRARIES}
         ${GLIB_LIBRARIES}
         ${GTK3_LIBRARIES}
-        ${LIBPULSE_LIBRARIES})
+        ${LIBPULSE_LIBRARIES}
+        ${DBUS_LIBRARIES})
 add_definitions(-DAUTO_COLORS=ON)
