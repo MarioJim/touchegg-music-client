@@ -6,7 +6,7 @@
 SpotifyMetadataProvider::SpotifyMetadataProvider() {
   initSpotifyProxy();
 
-  std::thread updateSpotifyMetadata{[this]() {
+  std::thread update_spotify_metadata_thread{[this]() {
     while (true) {
       if (this->spotify_proxy == nullptr && !this->initSpotifyProxy()) {
         return;
@@ -30,7 +30,7 @@ SpotifyMetadataProvider::SpotifyMetadataProvider() {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
   }};
-  updateSpotifyMetadata.detach();
+  update_spotify_metadata_thread.detach();
 }
 
 SpotifyMetadataProvider::~SpotifyMetadataProvider() {
