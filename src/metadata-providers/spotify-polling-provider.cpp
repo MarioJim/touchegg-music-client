@@ -137,7 +137,7 @@ std::unique_ptr<Metadata> SpotifyPollingProvider::parseMetadataFromGVariant(
   PlaybackStatus playback_status =
       playbackStatusFromString(playback_status_str);
 
-  return std::make_unique<Metadata>(song, album, artist, playback_status);
+  return std::make_unique<Metadata>(song, album, artist, playback_status, nullptr);
 }
 
 GVariant *SpotifyPollingProvider::fetchMetadataGVariant() {

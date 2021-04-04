@@ -2,6 +2,7 @@
 #define TOUCHEGG_MUSIC_CLIENT_WINDOW_H
 
 #include <cairo.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <memory>
 #include <string>
@@ -21,6 +22,7 @@ class Window {
  private:
   void renderVolumeWindow(cairo_t* ctx, double volume_percentage);
   void renderMusicWindow(cairo_t* ctx, std::unique_ptr<Metadata> metadata);
+  void renderMusicWindowWithAlbum(cairo_t* ctx, std::unique_ptr<Metadata> metadata);
   void renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
                                 double music_window_x,
                                 double music_window_y) const;
@@ -28,11 +30,12 @@ class Window {
   [[nodiscard]] inline double calculateIndicatorY(double percentage) const;
   static inline double calculateIndicatorHeight(double percentage);
   [[nodiscard]] inline double calculateIndicatorBackgroundX() const;
-  [[nodiscard]] inline double calculateIndicatorBackgroundY() const;
+  [[nodiscard]] inline double calculateBackgroundY() const;
   [[nodiscard]] inline double calculateIndicatorBackgroundWidth() const;
-  [[nodiscard]] inline double calculateIndicatorBackgroundHeight() const;
+  [[nodiscard]] inline double calculateBackgroundHeight() const;
   static std::string trimText(cairo_t* ctx, std::string text, double max_width);
 
+  const WindowSystem& window_system;
   std::unique_ptr<CairoSurface> cairo_surface;
   Rectangle monitor;
 
@@ -42,6 +45,7 @@ class Window {
   const double kIndicatorBackgroundBottomMargin = 40;
 
   const double kMarginBetweenWindows = 6;
+  const double kMarginAlbumIcon = 20;
 
   const double kMusicBackgroundWidth = 500;
   const double kMusicBackgroundHorizPadding = 30;

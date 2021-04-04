@@ -2,8 +2,10 @@
 #define TOUCHEGG_MUSIC_CLIENT_SPOTIFY_NOTIFICATIONS_PROVIDER_H
 
 #include <dbus/dbus.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <memory>
+#include <optional>
 #include <shared_mutex>
 
 #include "metadata-providers/base-metadata-provider.h"
@@ -19,6 +21,9 @@ class SpotifyNotificationsProvider : public BaseMetadataProvider {
   static DBusHandlerResult onNotificationReceived(
       [[maybe_unused]] DBusConnection *connection, DBusMessage *message,
       void *user_data);
+  static std::optional<DBusMessageIter> findImageDataHint(
+      DBusMessageIter *hints_iter);
+  static GdkPixbuf *parseIconFromDBusVariant(DBusMessageIter *variant_iter);
 
   DBusConnection *connection{nullptr};
   std::shared_mutex metadata_mutex;
@@ -28,8 +33,10 @@ class SpotifyNotificationsProvider : public BaseMetadataProvider {
   const std::array<const char *, 1> kNotificationFilters = {
       "type='method_call',interface='org.freedesktop.Notifications',"
       "member='Notify',arg0='Spotify'"};
-  const std::string kNotificationsPath = "/org/freedesktop/Notifications";
-  const std::string kSeparator = " - ";
+  static constexpr const std::string_view kNotificationsPath =
+      "/org/freedesktop/Notifications";
+  static constexpr const std::string_view kSeparator = " - ";
+  static constexpr const std::string_view kImageDataKey = "image-data";
 };
 
 #endif  // TOUCHEGG_MUSIC_CLIENT_SPOTIFY_NOTIFICATIONS_PROVIDER_H
