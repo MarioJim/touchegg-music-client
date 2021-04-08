@@ -3,6 +3,7 @@
 #include <glib-object.h>
 
 #include <iostream>
+#include <string>
 #include <thread>
 #include <vector>
 
@@ -66,12 +67,8 @@ SpotifyNotificationsProvider::~SpotifyNotificationsProvider() {
   dbus_connection_close(connection);
 }
 
-std::unique_ptr<Metadata> SpotifyNotificationsProvider::getMetadata() {
-  std::shared_lock lock(metadata_mutex);
-  if (metadata == nullptr) {
-    return nullptr;
-  }
-  return std::make_unique<Metadata>(*metadata);
+std::shared_ptr<const Metadata> SpotifyNotificationsProvider::getMetadata() {
+  return atomic_load(&metadata);
 }
 
 DBusHandlerResult SpotifyNotificationsProvider::onNotificationReceived(
@@ -119,14 +116,9 @@ DBusHandlerResult SpotifyNotificationsProvider::onNotificationReceived(
     album_icon = parseIconFromDBusVariant(&hint_value_iter);
   }
 
-  std::unique_lock lock(provider->metadata_mutex);
-  if (provider->metadata != nullptr &&
-      provider->metadata->album_icon != nullptr) {
-    g_object_unref(provider->metadata->album_icon);
-  }
-  provider->metadata = std::make_unique<Metadata>(
+  std::shared_ptr<const Metadata> new_metadata = std::make_shared<Metadata>(
       song, album, artist, PlaybackStatus::UNKNOWN, album_icon);
-  lock.unlock();
+  atomic_store(&(provider->metadata), new_metadata);
 
   return DBUS_HANDLER_RESULT_HANDLED;
 }

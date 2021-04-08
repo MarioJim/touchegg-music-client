@@ -8,9 +8,9 @@ MetadataController::MetadataController() {
   providers.push_back(std::make_unique<SpotifyPollingProvider>());
 }
 
-std::unique_ptr<Metadata> MetadataController::getMetadata() const {
+std::shared_ptr<const Metadata> MetadataController::getMetadata() const {
   for (const auto& provider : providers) {
-    std::unique_ptr<Metadata> metadata = provider->getMetadata();
+    std::shared_ptr<const Metadata> metadata = provider->getMetadata();
     if (metadata != nullptr) {
       return metadata;
     }
