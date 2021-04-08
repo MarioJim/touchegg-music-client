@@ -17,12 +17,15 @@ class Window {
  public:
   explicit Window(const WindowSystem& window_system);
 
-  void render(double volume_percentage, std::unique_ptr<Metadata> metadata);
+  void render(double volume_percentage,
+              std::shared_ptr<const Metadata> metadata);
 
  private:
   void renderVolumeWindow(cairo_t* ctx, double volume_percentage);
-  void renderMusicWindow(cairo_t* ctx, std::unique_ptr<Metadata> metadata);
-  void renderMusicWindowWithAlbum(cairo_t* ctx, std::unique_ptr<Metadata> metadata);
+  void renderMusicWindow(cairo_t* ctx,
+                         std::shared_ptr<const Metadata> metadata);
+  void renderMusicWindowWithAlbum(cairo_t* ctx,
+                                  std::shared_ptr<const Metadata> metadata);
   void renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
                                 double music_window_x,
                                 double music_window_y) const;

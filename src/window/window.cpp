@@ -12,13 +12,7 @@ Window::Window(const WindowSystem& window_system)
       monitor(window_system.getDesktopWorkarea()) {}
 
 void Window::render(double volume_percentage,
-                    std::unique_ptr<Metadata> metadata) {
-  GdkPixbuf* album_icon = nullptr;
-  if (metadata->album_icon != nullptr) {
-    album_icon = metadata->album_icon;
-    g_object_ref(album_icon);
-  }
-
+                    std::shared_ptr<const Metadata> metadata) {
   cairo_t* ctx = cairo_surface->getContext();
 
   // Clear the background
@@ -28,17 +22,17 @@ void Window::render(double volume_percentage,
 
   renderVolumeWindow(ctx, volume_percentage);
   if (metadata != nullptr) {
-    if (album_icon == nullptr) {
+    // TODO: check if album_icon can be unref'd before flushing the surface
+    GdkPixbuf* album_icon_ptr = metadata->album_icon;
+    if (album_icon_ptr == nullptr) {
       renderMusicWindow(ctx, std::move(metadata));
+      cairo_surface->flush();
     } else {
+      g_object_ref(album_icon_ptr);
       renderMusicWindowWithAlbum(ctx, std::move(metadata));
+      cairo_surface->flush();
+      g_object_unref(album_icon_ptr);
     }
-  }
-
-  cairo_surface->flush();
-
-  if (album_icon != nullptr) {
-    g_object_unref(album_icon);
   }
 }
 
@@ -82,7 +76,7 @@ void Window::renderVolumeWindow(cairo_t* ctx, double volume_percentage) {
 }
 
 void Window::renderMusicWindow(cairo_t* ctx,
-                               std::unique_ptr<Metadata> metadata) {
+                               std::shared_ptr<const Metadata> metadata) {
   double background_height = calculateBackgroundHeight();
   double background_x = calculateIndicatorBackgroundX() +
                         calculateIndicatorBackgroundWidth() +
@@ -121,8 +115,8 @@ void Window::renderMusicWindow(cairo_t* ctx,
                            background_y);
 }
 
-void Window::renderMusicWindowWithAlbum(cairo_t* ctx,
-                                        std::unique_ptr<Metadata> metadata) {
+void Window::renderMusicWindowWithAlbum(
+    cairo_t* ctx, std::shared_ptr<const Metadata> metadata) {
   double background_height = calculateBackgroundHeight();
   double background_x = calculateIndicatorBackgroundX() +
                         calculateIndicatorBackgroundWidth() +

@@ -14,19 +14,18 @@ class SpotifyPollingProvider : public BaseMetadataProvider {
  public:
   SpotifyPollingProvider();
   ~SpotifyPollingProvider();
-  std::unique_ptr<Metadata> getMetadata() override;
+  std::shared_ptr<const Metadata> getMetadata() override;
 
  private:
   bool initSpotifyProxy();
   bool isSpotifyDBusConnected();
   GVariant *fetchMetadataGVariant();
   GVariant *fetchPlaybackStatusGVariant();
-  static std::unique_ptr<Metadata> parseMetadataFromGVariant(
+  static std::shared_ptr<const Metadata> metadataFromGVariant(
       GVariant *metadata_dict, GVariant *playback_status_variant);
 
   GDBusProxy *spotify_proxy{nullptr};
-  std::shared_mutex metadata_mutex;
-  std::unique_ptr<Metadata> metadata;
+  std::shared_ptr<const Metadata> metadata;
 
   const char *const kSpotifyDBusName{"org.mpris.MediaPlayer2.spotify"};
 };

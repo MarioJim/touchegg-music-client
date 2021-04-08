@@ -10,7 +10,7 @@
 class MetadataController {
  public:
   MetadataController();
-  [[nodiscard]] std::unique_ptr<Metadata> getMetadata() const;
+  [[nodiscard]] std::shared_ptr<const Metadata> getMetadata() const;
 
  private:
   std::vector<std::unique_ptr<BaseMetadataProvider>> providers;

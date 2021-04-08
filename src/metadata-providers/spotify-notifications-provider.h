@@ -4,6 +4,7 @@
 #include <dbus/dbus.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include <atomic>
 #include <memory>
 #include <optional>
 #include <shared_mutex>
@@ -15,7 +16,7 @@ class SpotifyNotificationsProvider : public BaseMetadataProvider {
  public:
   SpotifyNotificationsProvider();
   ~SpotifyNotificationsProvider();
-  std::unique_ptr<Metadata> getMetadata() override;
+  std::shared_ptr<const Metadata> getMetadata() override;
 
  private:
   static DBusHandlerResult onNotificationReceived(
@@ -26,8 +27,7 @@ class SpotifyNotificationsProvider : public BaseMetadataProvider {
   static GdkPixbuf *parseIconFromDBusVariant(DBusMessageIter *variant_iter);
 
   DBusConnection *connection{nullptr};
-  std::shared_mutex metadata_mutex;
-  std::unique_ptr<Metadata> metadata;
+  std::shared_ptr<const Metadata> metadata;
 
   const char *const kDBusBecomeMonitor{"BecomeMonitor"};
   const std::array<const char *, 1> kNotificationFilters = {
