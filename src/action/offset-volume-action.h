@@ -22,7 +22,7 @@ class OffsetVolumeAction : public Action {
   const MetadataController &metadata_controller;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
-  std::unique_ptr<Window> window = nullptr;
+  std::unique_ptr<Window> window{nullptr};
   double last_gesture_percentage = 0;
 };
 

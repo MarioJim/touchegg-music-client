@@ -15,6 +15,16 @@ class SpotifyNotificationsProvider : public BaseMetadataProvider {
  public:
   SpotifyNotificationsProvider();
   ~SpotifyNotificationsProvider();
+
+  SpotifyNotificationsProvider(const SpotifyNotificationsProvider &other) =
+      delete;
+  SpotifyNotificationsProvider &operator=(
+      const SpotifyNotificationsProvider &other) = delete;
+  SpotifyNotificationsProvider(SpotifyNotificationsProvider &&other) noexcept =
+      delete;
+  SpotifyNotificationsProvider &operator=(
+      SpotifyNotificationsProvider &&other) noexcept = delete;
+
   std::shared_ptr<const Metadata> getMetadata() override;
 
  private:
