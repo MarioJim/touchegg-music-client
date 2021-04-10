@@ -13,6 +13,11 @@ class PulseAudioAdapter {
   PulseAudioAdapter();
   ~PulseAudioAdapter();
 
+  PulseAudioAdapter(const PulseAudioAdapter& other) = delete;
+  PulseAudioAdapter& operator=(const PulseAudioAdapter& other) = delete;
+  PulseAudioAdapter(PulseAudioAdapter&& other) noexcept = delete;
+  PulseAudioAdapter& operator=(PulseAudioAdapter&& other) noexcept = delete;
+
   void offset_volume(double delta_percentage);
   double get_volume();
 
@@ -24,7 +29,7 @@ class PulseAudioAdapter {
 
   int success = 0;
 
-  static constexpr auto kDefaultSink = "@DEFAULT_SINK@";
+  static constexpr const char* kDefaultSink = "@DEFAULT_SINK@";
 };
 
 #endif  // TOUCHEGG_MUSIC_CLIENT_PULSEAUDIO_ADAPTER_H

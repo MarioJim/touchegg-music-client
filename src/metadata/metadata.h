@@ -28,6 +28,11 @@ struct Metadata {
       g_object_unref(album_icon);
     }
   }
+
+  Metadata(const Metadata& other) = delete;
+  Metadata& operator=(const Metadata& other) = delete;
+  Metadata(Metadata&& other) noexcept = delete;
+  Metadata& operator=(Metadata&& other) noexcept = delete;
 };
 
 #endif  // TOUCHEGG_MUSIC_CLIENT_METADATA_H

@@ -24,7 +24,7 @@ class GestureController : public GestureControllerDelegate {
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
 
-  std::unique_ptr<Action> action = nullptr;
+  std::unique_ptr<Action> action{nullptr};
 };
 
 #endif  // TOUCHEGG_MUSIC_CLIENT_GESTURE_CONTROLLER_H
