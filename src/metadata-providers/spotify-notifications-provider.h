@@ -4,10 +4,9 @@
 #include <dbus/dbus.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <atomic>
 #include <memory>
 #include <optional>
-#include <shared_mutex>
+#include <string_view>
 
 #include "metadata-providers/base-metadata-provider.h"
 #include "metadata/metadata.h"

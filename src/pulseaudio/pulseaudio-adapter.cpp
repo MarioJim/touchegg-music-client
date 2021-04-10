@@ -129,5 +129,5 @@ void PulseAudioAdapter::offset_volume(double delta_percentage) {
 
 double PulseAudioAdapter::get_volume() {
   pa_volume_t volume = pa_cvolume_max(&sink_volume);
-  return volume * 100.0F / PA_VOLUME_NORM + 0.5F;
+  return static_cast<double>(volume) * 100.0 / PA_VOLUME_NORM + 0.5;
 }

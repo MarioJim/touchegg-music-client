@@ -4,16 +4,13 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <glib-object.h>
 
-#include <iostream>
 #include <string>
-#include <tuple>
 #include <utility>
 
 #include "metadata/playback-status.h"
 
 struct Metadata {
  public:
-  static const size_t fields_size = 120;
   std::string song, album, artist;
   PlaybackStatus playback_status;
   GdkPixbuf* album_icon;

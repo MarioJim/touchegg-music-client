@@ -1,6 +1,7 @@
 #include "metadata-providers/spotify-polling-provider.h"
 
 #include <iostream>
+#include <string>
 #include <thread>
 
 SpotifyPollingProvider::SpotifyPollingProvider() {

@@ -7,7 +7,6 @@
 #include "controllers/metadata-controller.h"
 #include "gesture/gesture.h"
 #include "pulseaudio/pulseaudio-adapter.h"
-#include "utils/color.h"
 #include "window/window.h"
 
 class OffsetVolumeAction : public Action {
