@@ -4,8 +4,6 @@
 #include <gio/gio.h>
 
 #include <memory>
-#include <shared_mutex>
-#include <string>
 
 #include "metadata-providers/base-metadata-provider.h"
 #include "metadata/metadata.h"
