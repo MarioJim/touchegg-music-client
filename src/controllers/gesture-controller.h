@@ -9,20 +9,23 @@
 #include "gesture/gesture.h"
 #include "pulseaudio/pulseaudio-adapter.h"
 #include "window-system/window-system.h"
+#include "windows/windows-config.h"
 
 class GestureController : public GestureControllerDelegate {
  public:
-  explicit GestureController(const MetadataController &metadata_controller,
-                             PulseAudioAdapter &adapter,
-                             const WindowSystem &window_system);
+  explicit GestureController(const MetadataController& metadata_controller,
+                             PulseAudioAdapter& adapter,
+                             const WindowSystem& window_system,
+                             const WindowsConfig& windows_config);
   void onGestureBegin(std::unique_ptr<Gesture> gesture) override;
   void onGestureUpdate(std::unique_ptr<Gesture> gesture) override;
   void onGestureEnd(std::unique_ptr<Gesture> gesture) override;
 
  private:
-  const MetadataController &metadata_controller;
-  PulseAudioAdapter &adapter;
-  const WindowSystem &window_system;
+  const MetadataController& metadata_controller;
+  PulseAudioAdapter& adapter;
+  const WindowsConfig& windows_config;
+  const WindowSystem& window_system;
 
   std::unique_ptr<Action> action{nullptr};
 };
