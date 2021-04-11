@@ -1,4 +1,4 @@
-#include "window/window.h"
+#include "windows/metadata-window.h"
 
 #include <gdk/gdk.h>
 #include <glib-object.h>
@@ -6,13 +6,13 @@
 #include <algorithm>
 #include <utility>
 
-Window::Window(const WindowSystem& window_system)
+MetadataWindow::MetadataWindow(const WindowSystem& window_system)
     : window_system(window_system),
       cairo_surface(window_system.createCairoSurface()),
       monitor(window_system.getDesktopWorkarea()) {}
 
-void Window::render(double volume_percentage,
-                    std::shared_ptr<const Metadata> metadata) {
+void MetadataWindow::render(double volume_percentage,
+                            std::shared_ptr<const Metadata> metadata) {
   cairo_t* ctx = cairo_surface->getContext();
 
   // Clear the background
@@ -36,7 +36,8 @@ void Window::render(double volume_percentage,
   }
 }
 
-void Window::renderVolumeWindow(cairo_t* ctx, double volume_percentage) {
+void MetadataWindow::renderVolumeWindow(cairo_t* ctx,
+                                        double volume_percentage) {
   double background_x = calculateIndicatorBackgroundX();
   double background_y = calculateBackgroundY();
   double background_width = calculateIndicatorBackgroundWidth();
@@ -75,8 +76,8 @@ void Window::renderVolumeWindow(cairo_t* ctx, double volume_percentage) {
   cairo_show_text(ctx, volume_string.c_str());
 }
 
-void Window::renderMusicWindow(cairo_t* ctx,
-                               std::shared_ptr<const Metadata> metadata) {
+void MetadataWindow::renderMusicWindow(
+    cairo_t* ctx, std::shared_ptr<const Metadata> metadata) {
   double background_height = calculateBackgroundHeight();
   double background_x = calculateIndicatorBackgroundX() +
                         calculateIndicatorBackgroundWidth() +
@@ -115,16 +116,14 @@ void Window::renderMusicWindow(cairo_t* ctx,
                            background_y);
 }
 
-void Window::renderMusicWindowWithAlbum(
+void MetadataWindow::renderMusicWindowWithAlbum(
     cairo_t* ctx, std::shared_ptr<const Metadata> metadata) {
   double background_height = calculateBackgroundHeight();
   double background_x = calculateIndicatorBackgroundX() +
                         calculateIndicatorBackgroundWidth() +
                         kMarginBetweenWindows;
   double background_y = calculateBackgroundY();
-
   double album_icon_area_size = background_height;
-  double album_icon_size = album_icon_area_size - 2 * kMarginAlbumIcon;
 
   // Draw the window background
   cairo_rectangle(ctx, background_x, background_y, kMusicBackgroundWidth,
@@ -156,26 +155,12 @@ void Window::renderMusicWindowWithAlbum(
   // Display the playback status icon
   renderPlaybackStatusIcon(ctx, metadata->playback_status, background_x,
                            background_y);
-
-  // Show album icon
-  int album_icon_size_int = static_cast<int>(album_icon_size);
-  int album_icon_x = static_cast<int>(background_x + kMarginAlbumIcon);
-  int album_icon_y = static_cast<int>(background_y + kMarginAlbumIcon);
-  GdkPixbuf* scaled_album_icon =
-      gdk_pixbuf_scale_simple(metadata->album_icon, album_icon_size_int,
-                              album_icon_size_int, GDK_INTERP_BILINEAR);
-  std::unique_ptr<CairoSurface> album_icon_surface =
-      window_system.createCairoSurface();
-  cairo_t* album_icon_ctx = album_icon_surface->getContext();
-  gdk_cairo_set_source_pixbuf(album_icon_ctx, scaled_album_icon, album_icon_x,
-                              album_icon_y);
-  cairo_paint(album_icon_ctx);
-  album_icon_surface->flush();
 }
 
-void Window::renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
-                                      double music_window_x,
-                                      double music_window_y) const {
+void MetadataWindow::renderPlaybackStatusIcon(cairo_t* ctx,
+                                              PlaybackStatus status,
+                                              double music_window_x,
+                                              double music_window_y) const {
   double startX = music_window_x + kMusicBackgroundWidth -
                   kMusicBackgroundHorizPadding - kPlaybackIconSize;
   double startY = music_window_y + kMusicBackgroundHorizPadding;
@@ -208,30 +193,33 @@ void Window::renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
   }
 }
 
-double Window::calculateIndicatorY(double percentage) const {
+double MetadataWindow::calculateIndicatorY(double percentage) const {
   return monitor.y + 190 - calculateIndicatorHeight(percentage);
 }
 
-double Window::calculateIndicatorHeight(double percentage) {
+double MetadataWindow::calculateIndicatorHeight(double percentage) {
   return 0.9 * std::clamp(percentage, 0.0, 100.0);
 }
 
-double Window::calculateIndicatorBackgroundX() const { return monitor.x + 64; }
+double MetadataWindow::calculateIndicatorBackgroundX() const {
+  return monitor.x + 64;
+}
 
-double Window::calculateBackgroundY() const {
+double MetadataWindow::calculateBackgroundY() const {
   return calculateIndicatorY(100) - kIndicatorBackgroundTopMargin;
 }
 
-double Window::calculateIndicatorBackgroundWidth() const {
+double MetadataWindow::calculateIndicatorBackgroundWidth() const {
   return kIndicatorWidth + 2 * kIndicatorBackgroundHorizMargin;
 }
 
-double Window::calculateBackgroundHeight() const {
+double MetadataWindow::calculateBackgroundHeight() const {
   return calculateIndicatorHeight(100) + kIndicatorBackgroundTopMargin +
          kIndicatorBackgroundBottomMargin;
 }
 
-std::string Window::trimText(cairo_t* ctx, std::string text, double max_width) {
+std::string MetadataWindow::trimText(cairo_t* ctx, std::string text,
+                                     double max_width) {
   cairo_text_extents_t extents;
 
   cairo_text_extents(ctx, text.c_str(), &extents);

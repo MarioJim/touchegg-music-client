@@ -10,7 +10,8 @@ OffsetVolumeAction::OffsetVolumeAction(
       window_system(window_system) {}
 
 void OffsetVolumeAction::onGestureBegin(const Gesture& /*gesture*/) {
-  window = std::make_unique<Window>(window_system);
+  metadata_window = std::make_unique<MetadataWindow>(window_system);
+  album_icon_window = std::make_unique<AlbumIconWindow>(window_system);
 }
 
 void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
@@ -20,8 +21,10 @@ void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
   adapter.offset_volume(delta_percentage);
 
   double new_volume = adapter.get_volume();
-  auto metadata = metadata_controller.getMetadata();
-  window->render(new_volume, std::move(metadata));
+  std::shared_ptr<const Metadata> metadata = metadata_controller.getMetadata();
+  GdkPixbuf* album_icon = metadata->album_icon;
+  metadata_window->render(new_volume, std::move(metadata));
+  album_icon_window->render(album_icon);
 
   last_gesture_percentage = gesture.percentage();
 }

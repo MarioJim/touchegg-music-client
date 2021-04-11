@@ -7,7 +7,8 @@
 #include "controllers/metadata-controller.h"
 #include "gesture/gesture.h"
 #include "pulseaudio/pulseaudio-adapter.h"
-#include "window/window.h"
+#include "windows/album-icon-window.h"
+#include "windows/metadata-window.h"
 
 class OffsetVolumeAction : public Action {
  public:
@@ -22,7 +23,8 @@ class OffsetVolumeAction : public Action {
   const MetadataController &metadata_controller;
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
-  std::unique_ptr<Window> window{nullptr};
+  std::unique_ptr<MetadataWindow> metadata_window{nullptr};
+  std::unique_ptr<AlbumIconWindow> album_icon_window{nullptr};
   double last_gesture_percentage = 0;
 };
 
