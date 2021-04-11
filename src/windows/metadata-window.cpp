@@ -9,6 +9,15 @@ MetadataWindow::MetadataWindow(const WindowSystem& window_system,
       windows_config(windows_config) {}
 
 void MetadataWindow::render(const std::shared_ptr<const Metadata>& metadata) {
+  size_t metadata_hash = std::hash<std::shared_ptr<const Metadata>>()(metadata);
+  if (metadata_hash == last_metadata_hash) {
+    return;
+  }
+  last_metadata_hash = metadata_hash;
+  if (metadata == nullptr) {
+    return;
+  }
+
   cairo_t* ctx = cairo_surface->getContext();
 
   // Clear the background
