@@ -17,11 +17,9 @@ class MetadataWindow {
   explicit MetadataWindow(const WindowSystem& window_system,
                           const WindowsConfig& windows_config);
 
-  void render(double volume_percentage,
-              const std::shared_ptr<const Metadata>& metadata);
+  void render(const std::shared_ptr<const Metadata>& metadata);
 
  private:
-  void renderVolumeWindow(cairo_t* ctx, double volume_percentage);
   void renderMusicWindow(cairo_t* ctx,
                          const std::shared_ptr<const Metadata>& metadata);
   void renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,

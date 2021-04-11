@@ -1,6 +1,8 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_OFFSET_VOLUME_ACTION_H
 #define TOUCHEGG_MUSIC_CLIENT_OFFSET_VOLUME_ACTION_H
 
+#include <windows/volume-window.h>
+
 #include <memory>
 
 #include "action/action.h"
@@ -26,8 +28,11 @@ class OffsetVolumeAction : public Action {
   PulseAudioAdapter &adapter;
   const WindowSystem &window_system;
   const WindowsConfig &windows_config;
+
+  std::unique_ptr<VolumeWindow> volume_window{nullptr};
   std::unique_ptr<MetadataWindow> metadata_window{nullptr};
   std::unique_ptr<AlbumIconWindow> album_icon_window{nullptr};
+
   double last_gesture_percentage = 0;
 };
 
