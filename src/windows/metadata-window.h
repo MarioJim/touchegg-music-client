@@ -30,6 +30,8 @@ class MetadataWindow {
   const Rectangle monitor;
   const WindowsConfig& windows_config;
 
+  size_t last_metadata_hash{};
+
   static constexpr const char* kEllipsis = "...";
 };
 
