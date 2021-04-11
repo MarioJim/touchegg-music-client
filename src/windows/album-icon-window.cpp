@@ -2,6 +2,7 @@
 
 #include <cairo.h>
 #include <gdk/gdk.h>
+#include <glib-object.h>
 
 AlbumIconWindow::AlbumIconWindow(const WindowSystem& window_system,
                                  const WindowsConfig& windows_config)
@@ -43,4 +44,6 @@ void AlbumIconWindow::render(GdkPixbuf* pixbuf) {
   cairo_fill(album_icon_ctx);
 
   cairo_surface->flush();
+
+  g_object_unref(scaled_album_icon);
 }
