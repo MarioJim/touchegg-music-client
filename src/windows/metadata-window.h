@@ -1,5 +1,5 @@
-#ifndef TOUCHEGG_MUSIC_CLIENT_WINDOW_H
-#define TOUCHEGG_MUSIC_CLIENT_WINDOW_H
+#ifndef TOUCHEGG_MUSIC_CLIENT_METADATA_WINDOW_H
+#define TOUCHEGG_MUSIC_CLIENT_METADATA_WINDOW_H
 
 #include <cairo.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -13,9 +13,9 @@
 #include "window-system/cairo-surface.h"
 #include "window-system/window-system.h"
 
-class Window {
+class MetadataWindow {
  public:
-  explicit Window(const WindowSystem& window_system);
+  explicit MetadataWindow(const WindowSystem& window_system);
 
   void render(double volume_percentage,
               std::shared_ptr<const Metadata> metadata);
@@ -48,7 +48,6 @@ class Window {
   const double kIndicatorBackgroundBottomMargin = 40;
 
   const double kMarginBetweenWindows = 6;
-  const double kMarginAlbumIcon = 20;
 
   const double kMusicBackgroundWidth = 500;
   const double kMusicBackgroundHorizPadding = 30;
@@ -59,4 +58,4 @@ class Window {
   static constexpr const char* kEllipsis = "...";
 };
 
-#endif  // TOUCHEGG_MUSIC_CLIENT_WINDOW_H
+#endif  // TOUCHEGG_MUSIC_CLIENT_METADATA_WINDOW_H
