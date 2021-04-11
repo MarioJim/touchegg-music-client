@@ -1,17 +1,18 @@
 #include "action/offset-volume-action.h"
 
-#include <utility>
-
 OffsetVolumeAction::OffsetVolumeAction(
     const MetadataController& metadata_controller, PulseAudioAdapter& adapter,
-    const WindowSystem& window_system)
+    const WindowSystem& window_system, const WindowsConfig& windows_config)
     : metadata_controller(metadata_controller),
       adapter(adapter),
-      window_system(window_system) {}
+      window_system(window_system),
+      windows_config(windows_config) {}
 
 void OffsetVolumeAction::onGestureBegin(const Gesture& /*gesture*/) {
-  metadata_window = std::make_unique<MetadataWindow>(window_system);
-  album_icon_window = std::make_unique<AlbumIconWindow>(window_system);
+  metadata_window =
+      std::make_unique<MetadataWindow>(window_system, windows_config);
+  album_icon_window =
+      std::make_unique<AlbumIconWindow>(window_system, windows_config);
 }
 
 void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
@@ -23,7 +24,7 @@ void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
   double new_volume = adapter.get_volume();
   std::shared_ptr<const Metadata> metadata = metadata_controller.getMetadata();
   GdkPixbuf* album_icon = metadata->album_icon;
-  metadata_window->render(new_volume, std::move(metadata));
+  metadata_window->render(new_volume, metadata);
   album_icon_window->render(album_icon);
 
   last_gesture_percentage = gesture.percentage();
