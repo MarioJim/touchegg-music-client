@@ -20,13 +20,11 @@ class MetadataWindow {
   void render(const std::shared_ptr<const Metadata>& metadata);
 
  private:
-  void renderMusicWindow(cairo_t* ctx,
-                         const std::shared_ptr<const Metadata>& metadata);
-  void renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
-                                double music_window_x,
-                                double music_window_y) const;
-
-  static std::string trimText(cairo_t* ctx, std::string text, double max_width);
+  inline void renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
+                                       double music_window_x,
+                                       double music_window_y) const;
+  static std::unique_ptr<char[]> trimText(cairo_t* ctx, const std::string& text,
+                                          double max_width);
 
   std::unique_ptr<CairoSurface> cairo_surface;
   const Rectangle monitor;

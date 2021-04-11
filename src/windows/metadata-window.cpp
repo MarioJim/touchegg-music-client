@@ -16,14 +16,6 @@ void MetadataWindow::render(const std::shared_ptr<const Metadata>& metadata) {
   cairo_set_operator(ctx, CAIRO_OPERATOR_SOURCE);
   cairo_paint(ctx);
 
-  if (metadata != nullptr) {
-    renderMusicWindow(ctx, metadata);
-    cairo_surface->flush();
-  }
-}
-
-void MetadataWindow::renderMusicWindow(
-    cairo_t* ctx, const std::shared_ptr<const Metadata>& metadata) {
   double background_height = windows_config.backgroundHeight();
   double background_x = windows_config.indicatorBackgroundX(monitor) +
                         windows_config.indicatorBackgroundWidth() +
@@ -47,23 +39,34 @@ void MetadataWindow::renderMusicWindow(
                           right_margin;
   // Write the song name
   cairo_set_font_size(ctx, 32);
-  std::string song = trimText(ctx, metadata->song, max_text_width);
   double song_x = background_x + right_margin;
   double song_y = background_y + windows_config.kSongStringY;
   cairo_move_to(ctx, song_x, song_y);
-  cairo_show_text(ctx, song.c_str());
+  std::unique_ptr<char[]> song = trimText(ctx, metadata->song, max_text_width);
+  if (song) {
+    cairo_show_text(ctx, song.get());
+  } else {
+    cairo_show_text(ctx, metadata->song.c_str());
+  }
 
   // Write the artist's name
   cairo_set_font_size(ctx, 20);
-  std::string artist = trimText(ctx, metadata->artist, max_text_width);
   double artist_x = background_x + right_margin;
   double artist_y = background_y + windows_config.kArtistStringY;
   cairo_move_to(ctx, artist_x, artist_y);
-  cairo_show_text(ctx, artist.c_str());
+  std::unique_ptr<char[]> artist =
+      trimText(ctx, metadata->artist, max_text_width);
+  if (artist) {
+    cairo_show_text(ctx, artist.get());
+  } else {
+    cairo_show_text(ctx, metadata->artist.c_str());
+  }
 
   // Display the playback status icon
   renderPlaybackStatusIcon(ctx, metadata->playback_status, background_x,
                            background_y);
+
+  cairo_surface->flush();
 }
 
 void MetadataWindow::renderPlaybackStatusIcon(cairo_t* ctx,
@@ -103,31 +106,41 @@ void MetadataWindow::renderPlaybackStatusIcon(cairo_t* ctx,
   }
 }
 
-std::string MetadataWindow::trimText(cairo_t* ctx, std::string text,
-                                     double max_width) {
+std::unique_ptr<char[]> MetadataWindow::trimText(cairo_t* ctx,
+                                                 const std::string& text,
+                                                 double max_width) {
   cairo_text_extents_t extents;
 
   cairo_text_extents(ctx, text.c_str(), &extents);
   double text_width = extents.width;
 
   if (text_width < max_width) {
-    return text;
+    return nullptr;
   }
 
   cairo_text_extents(ctx, kEllipsis, &extents);
   double ellipsis_width = extents.width;
   max_width -= ellipsis_width;
 
-  int chars_to_keep = static_cast<int>(max_width * text.size() / text_width);
-  std::string cropped_text = text.substr(0, chars_to_keep);
-  cairo_text_extents(ctx, cropped_text.c_str(), &extents);
+  auto text_length = static_cast<double>(text.size());
+  int chars_to_keep = static_cast<int>(max_width * text_length / text_width);
+  std::unique_ptr<char[]> new_text =
+      std::make_unique<char[]>(chars_to_keep + 4);
+  text.copy(new_text.get(), chars_to_keep);
+  new_text[chars_to_keep] = '\0';
+  cairo_text_extents(ctx, new_text.get(), &extents);
   double cropped_text_width = extents.width;
 
   while (cropped_text_width > max_width) {
-    cropped_text.pop_back();
-    cairo_text_extents(ctx, cropped_text.c_str(), &extents);
+    --chars_to_keep;
+    new_text[chars_to_keep] = '\0';
+    cairo_text_extents(ctx, new_text.get(), &extents);
     cropped_text_width = extents.width;
   }
 
-  return cropped_text.append(kEllipsis);
+  new_text[chars_to_keep + 0] = '.';
+  new_text[chars_to_keep + 1] = '.';
+  new_text[chars_to_keep + 2] = '.';
+  new_text[chars_to_keep + 3] = '\0';
+  return new_text;
 }
