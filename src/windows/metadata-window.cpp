@@ -14,6 +14,7 @@ void MetadataWindow::render(const std::shared_ptr<const Metadata>& metadata) {
     return;
   }
   last_metadata_hash = metadata_hash;
+
   if (metadata == nullptr) {
     return;
   }
