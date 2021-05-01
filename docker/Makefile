@@ -9,11 +9,11 @@
 all: archlinux-image debian-image
 
 archlinux-image:
-	docker build . -f archlinux.Dockerfile -t mariojim/touchegg-music-client-deps:archlinux
+	docker build . -f Dockerfile.arch -t mariojim/touchegg-music-client-deps:archlinux
 	docker push mariojim/touchegg-music-client-deps:archlinux
 
 debian-image:
-	docker build . -f debian.Dockerfile -t mariojim/touchegg-music-client-deps:debian
+	docker build . -f Dockerfile.debian -t mariojim/touchegg-music-client-deps:debian
 	docker push mariojim/touchegg-music-client-deps:debian
 
 .PHONY = all archlinux-image debian-image
