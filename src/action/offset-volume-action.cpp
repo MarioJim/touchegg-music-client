@@ -28,8 +28,10 @@ void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
   std::shared_ptr<const Metadata> metadata = metadata_controller.getMetadata();
   metadata_window->render(metadata);
 
-  GdkPixbuf* album_icon = metadata->album_icon;
-  album_icon_window->render(album_icon);
+  if (metadata != nullptr) {
+    GdkPixbuf* album_icon = metadata->album_icon;
+    album_icon_window->render(album_icon);
+  }
 
   last_gesture_percentage = gesture.percentage();
 }

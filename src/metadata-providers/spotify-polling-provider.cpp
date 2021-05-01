@@ -119,6 +119,10 @@ std::shared_ptr<const Metadata> SpotifyPollingProvider::metadataFromGVariant(
     g_variant_unref(album_variant);
   }
 
+  if (song.empty() && album.empty()) {
+    return nullptr;
+  }
+
   GVariant *artist_variant = g_variant_lookup_value(
       metadata_dict, "xesam:artist", G_VARIANT_TYPE_STRING_ARRAY);
   std::string artist;
