@@ -2,18 +2,18 @@
 # Mario Jiménez <mario.emilio.j@gmail.com>
 
 # Usage:
-# make                    # create and push both images
-# make archlinux-image    # create and push archlinux-based image
-# make debian-image       # create and push debian-based image
+# make                 # create and push both images
+# make arch_image      # create and push archlinux-based image
+# make debian_image    # create and push debian-based image
 
-all: archlinux-image debian-image
+all: arch_image debian_image
 
-archlinux-image:
+arch_image:
 	docker build . -f Dockerfile.arch -t mariojim/touchegg-music-client-deps:archlinux
 	docker push mariojim/touchegg-music-client-deps:archlinux
 
-debian-image:
+debian_image:
 	docker build . -f Dockerfile.debian -t mariojim/touchegg-music-client-deps:debian
 	docker push mariojim/touchegg-music-client-deps:debian
 
-.PHONY = all archlinux-image debian-image
+.PHONY = all arch_image debian_image
