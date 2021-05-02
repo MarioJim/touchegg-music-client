@@ -2,13 +2,20 @@
 #define TOUCHEGG_MUSIC_CLIENT_SPOTIFY_SIGNALS_PROVIDER_H
 
 #include <gio/gio.h>
+#include <giomm.h>
+#include <glibmm.h>
 
+#include <map>
 #include <memory>
+#include <string>
 
 #include "metadata-providers/base-metadata-provider.h"
 #include "metadata/metadata.h"
 
-class SpotifySignalsProvider : public BaseMetadataProvider {
+using VariantDict = std::map<std::string, Glib::VariantBase>;
+
+class SpotifySignalsProvider : public BaseMetadataProvider,
+                               public sigc::trackable {
  public:
   SpotifySignalsProvider();
   ~SpotifySignalsProvider();
@@ -23,17 +30,17 @@ class SpotifySignalsProvider : public BaseMetadataProvider {
   std::shared_ptr<const Metadata> getMetadata() override;
 
  private:
-  bool initSpotifyProxy();
-  static void onPropertiesChanged(GDBusConnection* connection,
-                                  const gchar* sender_name,
-                                  const gchar* object_path,
-                                  const gchar* interface_name,
-                                  const gchar* signal_name,
-                                  GVariant* parameters, gpointer user_data);
-  static std::shared_ptr<const Metadata> metadataFromGVariant(
-      GVariant* metadata_dict, GVariant* playback_status_variant);
+  void onPropertiesChanged(
+      const Glib::RefPtr<Gio::DBus::Connection>& connection,
+      const Glib::ustring& sender_name, const Glib::ustring& object_path,
+      const Glib::ustring& interface_name, const Glib::ustring& signal_name,
+      const Glib::VariantContainerBase& parameters);
+  static std::shared_ptr<const Metadata> parseMetadata(
+      const VariantDict& metadata_dict, const std::string& playback_status_str);
+  static inline std::string variantToString(const Glib::VariantBase& variant);
+  static inline VariantDict variantToDict(const Glib::VariantBase& variant);
 
-  GDBusConnection* dbus_connection{nullptr};
+  Glib::RefPtr<Gio::DBus::Connection> dbus_connection;
   std::shared_ptr<const Metadata> metadata;
 };
 
