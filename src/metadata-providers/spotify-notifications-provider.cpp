@@ -71,8 +71,7 @@ std::shared_ptr<const Metadata> SpotifyNotificationsProvider::getMetadata() {
 }
 
 DBusHandlerResult SpotifyNotificationsProvider::onNotificationReceived(
-    [[maybe_unused]] DBusConnection *connection, DBusMessage *message,
-    void *user_data) {
+    DBusConnection * /*connection*/, DBusMessage *message, void *user_data) {
   if (dbus_message_get_type(message) != DBUS_MESSAGE_TYPE_METHOD_CALL) {
     return DBUS_HANDLER_RESULT_HANDLED;
   }
@@ -187,10 +186,6 @@ GdkPixbuf *SpotifyNotificationsProvider::parseIconFromDBusVariant(
       gdk_pixbuf_new_from_bytes(bytes, GDK_COLORSPACE_RGB, has_alpha,
                                 bits_per_sample, width, height, rowstride);
 
-  // TODO: See if I need to revert this????
-  //  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_data(
-  //      bytes.data(), GDK_COLORSPACE_RGB, has_alpha, bits_per_sample, width,
-  //      height, rowstride, nullptr, nullptr);
   if (pixbuf == nullptr) {
     std::cout << "SpotifyNotificationsProvider: Couldn't generate image from "
                  "album icon data"

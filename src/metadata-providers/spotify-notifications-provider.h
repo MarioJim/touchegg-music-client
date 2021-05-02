@@ -28,9 +28,9 @@ class SpotifyNotificationsProvider : public BaseMetadataProvider {
   std::shared_ptr<const Metadata> getMetadata() override;
 
  private:
-  static DBusHandlerResult onNotificationReceived(
-      [[maybe_unused]] DBusConnection *connection, DBusMessage *message,
-      void *user_data);
+  static DBusHandlerResult onNotificationReceived(DBusConnection *connection,
+                                                  DBusMessage *message,
+                                                  void *user_data);
   static std::optional<DBusMessageIter> findImageDataHint(
       DBusMessageIter *hints_iter);
   static GdkPixbuf *parseIconFromDBusVariant(DBusMessageIter *variant_iter);

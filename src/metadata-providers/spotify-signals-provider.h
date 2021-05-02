@@ -1,7 +1,6 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_SPOTIFY_SIGNALS_PROVIDER_H
 #define TOUCHEGG_MUSIC_CLIENT_SPOTIFY_SIGNALS_PROVIDER_H
 
-#include <gio/gio.h>
 #include <giomm.h>
 #include <glibmm.h>
 
