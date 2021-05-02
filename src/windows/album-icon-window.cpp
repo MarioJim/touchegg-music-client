@@ -1,4 +1,4 @@
-#include "album-icon-window.h"
+#include "windows/album-icon-window.h"
 
 #include <cairo.h>
 #include <gdk/gdk.h>

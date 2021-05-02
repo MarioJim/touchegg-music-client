@@ -1,6 +1,8 @@
-#include "volume-window.h"
+#include "windows/volume-window.h"
 
 #include <cairo.h>
+
+#include <string>
 
 VolumeWindow::VolumeWindow(const WindowSystem& window_system,
                            const WindowsConfig& windows_config)
