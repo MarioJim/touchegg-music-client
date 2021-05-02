@@ -5,7 +5,7 @@ FetchContent_Declare(touchegg
         GIT_TAG 2.0.9
         GIT_SHALLOW ON
         GIT_PROGRESS ON
-)
+        )
 FetchContent_MakeAvailable(touchegg)
 
 set_target_properties(touchegg PROPERTIES EXCLUDE_FROM_ALL 1)
