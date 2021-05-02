@@ -21,9 +21,9 @@ The information displayed on the windows is sourced from different providers, th
 It works by monitoring the notifications bus and parsing only the Spotify notifications. It supports showing the album
 icon but it currently doesn't support the playback status.
 
-#### Spotify Polling Provider
+#### Spotify Signals Provider
 
-It works by polling Spotify's `org.mpris.MediaPlayer2.Player` DBus interface every 500ms.
+It works by listening to Spotify's DBus signals emitted when a property changes (either Metadata or PlaybackStatus).
 
 ### Windows
 
@@ -59,11 +59,13 @@ $ paru -S touchegg-music-client
 ## Todo
 
 - [x] Display album icon
-- [ ] SpotifyNotificationsProvider listening to Spotify's `PropertiesChanged` signal
-- [ ] SpotifyPollingProvider: configurable timer for polling
+- [x] SpotifySignalsProvider listening to Spotify's `PropertiesChanged` signal
 - [ ] Configurable number of fingers/gesture direction
 - [ ] Configurable windows
 - [ ] Configurable providers priority
 - [ ] Configurable PulseAudio sink
+- [ ] Migrate to pangomm for text rendering
+- [ ] Migrate to cairomm
+- [ ] Migrate DBus connection to glibmm
 - [ ] Add a configuration file
-- [ ] Add new providers (chromium)
+- [ ] Add new providers (chromium, vlc)

@@ -1,11 +1,11 @@
 #include "controllers/metadata-controller.h"
 
 #include "metadata-providers/spotify-notifications-provider.h"
-#include "metadata-providers/spotify-polling-provider.h"
+#include "metadata-providers/spotify-signals-provider.h"
 
 MetadataController::MetadataController() {
   providers.push_back(std::make_unique<SpotifyNotificationsProvider>());
-  providers.push_back(std::make_unique<SpotifyPollingProvider>());
+  providers.push_back(std::make_unique<SpotifySignalsProvider>());
 }
 
 std::shared_ptr<const Metadata> MetadataController::getMetadata() const {

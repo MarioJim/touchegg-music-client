@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD 17)
 include(cmake/touchegg-dependency.cmake)
 
 list(APPEND CMAKE_MODULE_PATH
-    "${PROJECT_SOURCE_DIR}/cmake/modules"
-    "${touchegg_SOURCE_DIR}/cmake/Modules")
+        "${PROJECT_SOURCE_DIR}/cmake/modules"
+        "${touchegg_SOURCE_DIR}/cmake/Modules")
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
+if (CMAKE_BUILD_TYPE MATCHES Debug)
     include(cmake/code-style.cmake)
-endif()
+endif ()
 
 find_package(Threads REQUIRED) # Required to use std threads
 find_package(LIBUDEV REQUIRED)
@@ -47,7 +47,8 @@ target_include_directories(touchegg-music-client PUBLIC
         ${GLIB_INCLUDE_DIRS}
         ${GTK3_INCLUDE_DIRS}
         ${LIBPULSE_INCLUDE_DIRS}
-        ${DBUS_INCLUDE_DIRS})
+        ${DBUS_INCLUDE_DIRS}
+        )
 target_link_libraries(touchegg-music-client
         stdc++fs # std::filesystem
         Threads::Threads # std::thread
@@ -62,5 +63,6 @@ target_link_libraries(touchegg-music-client
         ${GLIB_LIBRARIES}
         ${GTK3_LIBRARIES}
         ${LIBPULSE_LIBRARIES}
-        ${DBUS_LIBRARIES})
+        ${DBUS_LIBRARIES}
+        )
 add_definitions(-DAUTO_COLORS=ON)
