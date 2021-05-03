@@ -4,10 +4,11 @@
 #include <gdk/gdk.h>
 #include <glib-object.h>
 
-AlbumIconWindow::AlbumIconWindow(const WindowSystem& window_system,
+AlbumIconWindow::AlbumIconWindow(std::unique_ptr<CairoSurface> cairo_surface,
+                                 const Rectangle& monitor,
                                  const WindowsConfig& windows_config)
-    : cairo_surface(window_system.createCairoSurface()),
-      monitor(window_system.getDesktopWorkarea()),
+    : cairo_surface(std::move(cairo_surface)),
+      monitor(monitor),
       windows_config(windows_config) {}
 
 void AlbumIconWindow::render(GdkPixbuf* pixbuf) {

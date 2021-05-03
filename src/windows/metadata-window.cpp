@@ -2,10 +2,11 @@
 
 #include <algorithm>
 
-MetadataWindow::MetadataWindow(const WindowSystem& window_system,
+MetadataWindow::MetadataWindow(std::unique_ptr<CairoSurface> cairo_surface,
+                               const Rectangle& monitor,
                                const WindowsConfig& windows_config)
-    : cairo_surface(window_system.createCairoSurface()),
-      monitor(window_system.getDesktopWorkarea()),
+    : cairo_surface(std::move(cairo_surface)),
+      monitor(monitor),
       windows_config(windows_config) {}
 
 void MetadataWindow::render(const std::shared_ptr<const Metadata>& metadata) {

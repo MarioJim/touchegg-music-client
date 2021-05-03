@@ -9,11 +9,13 @@ OffsetVolumeAction::OffsetVolumeAction(
       windows_config(windows_config) {}
 
 void OffsetVolumeAction::onGestureBegin(const Gesture& /*gesture*/) {
-  volume_window = std::make_unique<VolumeWindow>(window_system, windows_config);
-  metadata_window =
-      std::make_unique<MetadataWindow>(window_system, windows_config);
-  album_icon_window =
-      std::make_unique<AlbumIconWindow>(window_system, windows_config);
+  const Rectangle monitor = window_system.getDesktopWorkarea();
+  volume_window = std::make_unique<VolumeWindow>(
+      window_system.createCairoSurface(), monitor, windows_config);
+  metadata_window = std::make_unique<MetadataWindow>(
+      window_system.createCairoSurface(), monitor, windows_config);
+  album_icon_window = std::make_unique<AlbumIconWindow>(
+      window_system.createCairoSurface(), monitor, windows_config);
 }
 
 void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {

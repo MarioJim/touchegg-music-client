@@ -4,10 +4,11 @@
 
 #include <string>
 
-VolumeWindow::VolumeWindow(const WindowSystem& window_system,
+VolumeWindow::VolumeWindow(std::unique_ptr<CairoSurface> cairo_surface,
+                           const Rectangle& monitor,
                            const WindowsConfig& windows_config)
-    : cairo_surface(window_system.createCairoSurface()),
-      monitor(window_system.getDesktopWorkarea()),
+    : cairo_surface(std::move(cairo_surface)),
+      monitor(monitor),
       windows_config(windows_config) {}
 
 void VolumeWindow::render(double volume_percentage) {

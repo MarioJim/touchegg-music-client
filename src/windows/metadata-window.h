@@ -9,12 +9,12 @@
 #include "metadata/metadata.h"
 #include "utils/rectangle.h"
 #include "window-system/cairo-surface.h"
-#include "window-system/window-system.h"
 #include "windows/windows-config.h"
 
 class MetadataWindow {
  public:
-  explicit MetadataWindow(const WindowSystem& window_system,
+  explicit MetadataWindow(std::unique_ptr<CairoSurface> cairo_surface,
+                          const Rectangle& monitor,
                           const WindowsConfig& windows_config);
 
   void render(const std::shared_ptr<const Metadata>& metadata);

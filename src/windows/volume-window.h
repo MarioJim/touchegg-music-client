@@ -5,12 +5,12 @@
 
 #include "utils/rectangle.h"
 #include "window-system/cairo-surface.h"
-#include "window-system/window-system.h"
 #include "windows/windows-config.h"
 
 class VolumeWindow {
  public:
-  explicit VolumeWindow(const WindowSystem& window_system,
+  explicit VolumeWindow(std::unique_ptr<CairoSurface> cairo_surface,
+                        const Rectangle& monitor,
                         const WindowsConfig& windows_config);
 
   void render(double volume_percentage);

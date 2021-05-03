@@ -7,19 +7,19 @@
 
 #include "utils/rectangle.h"
 #include "window-system/cairo-surface.h"
-#include "window-system/window-system.h"
 #include "windows/windows-config.h"
 
 class AlbumIconWindow {
  public:
-  explicit AlbumIconWindow(const WindowSystem& window_system,
+  explicit AlbumIconWindow(std::unique_ptr<CairoSurface> cairo_surface,
+                           const Rectangle& monitor,
                            const WindowsConfig& windows_config);
 
   void render(GdkPixbuf* pixbuf);
 
  private:
   std::unique_ptr<CairoSurface> cairo_surface;
-  Rectangle monitor;
+  const Rectangle monitor;
   const WindowsConfig& windows_config;
 
   GdkPixbuf* last_pixbuf{nullptr};

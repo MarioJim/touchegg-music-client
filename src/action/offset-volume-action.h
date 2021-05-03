@@ -9,6 +9,7 @@
 #include "controllers/metadata-controller.h"
 #include "gesture/gesture.h"
 #include "pulseaudio/pulseaudio-adapter.h"
+#include "window-system/window-system.h"
 #include "windows/album-icon-window.h"
 #include "windows/metadata-window.h"
 #include "windows/windows-config.h"
