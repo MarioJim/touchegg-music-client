@@ -115,7 +115,8 @@ DBusHandlerResult SpotifyNotificationsProvider::onNotificationReceived(
   }
 
   std::shared_ptr<const Metadata> new_metadata = std::make_shared<Metadata>(
-      song, album, artist, PlaybackStatus::UNKNOWN, album_icon);
+      std::move(song), std::move(album), std::move(artist),
+      PlaybackStatus::UNKNOWN, album_icon);
   atomic_store(&(provider->metadata), new_metadata);
 
   return DBUS_HANDLER_RESULT_HANDLED;

@@ -29,7 +29,7 @@ void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
   metadata_window->render(metadata);
 
   if (metadata != nullptr) {
-    GdkPixbuf* album_icon = metadata->album_icon;
+    GdkPixbuf* album_icon = metadata->getAlbumIcon();
     album_icon_window->render(album_icon);
   }
 

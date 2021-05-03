@@ -31,9 +31,9 @@ void MetadataWindow::render(const std::shared_ptr<const Metadata>& metadata) {
                         windows_config.indicatorBackgroundWidth() +
                         windows_config.kMarginBetweenWindows;
   double background_y = windows_config.backgroundY(monitor);
-  double right_margin = metadata->album_icon == nullptr
-                            ? windows_config.kMusicBackgroundHorizPadding
-                            : background_height;
+  double right_margin = metadata->hasAlbumIcon()
+                            ? background_height
+                            : windows_config.kMusicBackgroundHorizPadding;
 
   // Draw the window background
   cairo_rectangle(ctx, background_x, background_y,
@@ -52,11 +52,12 @@ void MetadataWindow::render(const std::shared_ptr<const Metadata>& metadata) {
   double song_x = background_x + right_margin;
   double song_y = background_y + windows_config.kSongStringY;
   cairo_move_to(ctx, song_x, song_y);
-  std::unique_ptr<char[]> song = trimText(ctx, metadata->song, max_text_width);
+  std::unique_ptr<char[]> song =
+      trimText(ctx, metadata->getSong(), max_text_width);
   if (song) {
     cairo_show_text(ctx, song.get());
   } else {
-    cairo_show_text(ctx, metadata->song.c_str());
+    cairo_show_text(ctx, metadata->getSong().c_str());
   }
 
   // Write the artist's name
@@ -65,15 +66,15 @@ void MetadataWindow::render(const std::shared_ptr<const Metadata>& metadata) {
   double artist_y = background_y + windows_config.kArtistStringY;
   cairo_move_to(ctx, artist_x, artist_y);
   std::unique_ptr<char[]> artist =
-      trimText(ctx, metadata->artist, max_text_width);
+      trimText(ctx, metadata->getArtist(), max_text_width);
   if (artist) {
     cairo_show_text(ctx, artist.get());
   } else {
-    cairo_show_text(ctx, metadata->artist.c_str());
+    cairo_show_text(ctx, metadata->getArtist().c_str());
   }
 
   // Display the playback status icon
-  renderPlaybackStatusIcon(ctx, metadata->playback_status, background_x,
+  renderPlaybackStatusIcon(ctx, metadata->getPlaybackStatus(), background_x,
                            background_y);
 
   cairo_surface->flush();

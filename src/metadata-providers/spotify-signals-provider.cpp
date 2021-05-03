@@ -87,7 +87,8 @@ std::shared_ptr<const Metadata> SpotifySignalsProvider::parseMetadata(
   PlaybackStatus playback_status =
       playbackStatusFromString(playback_status_str);
 
-  return std::make_shared<const Metadata>(song, album, artist, playback_status,
+  return std::make_shared<const Metadata>(std::move(song), std::move(album),
+                                          std::move(artist), playback_status,
                                           nullptr);
 }
 
