@@ -27,6 +27,7 @@ find_package(GTK3 REQUIRED)
 find_package(LibPulse REQUIRED)
 find_package(DBus REQUIRED)
 find_package(Glibmm REQUIRED)
+find_package(Cairomm REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/src/*.h
@@ -50,6 +51,7 @@ target_include_directories(touchegg-music-client PUBLIC
         ${LIBPULSE_INCLUDE_DIRS}
         ${DBUS_INCLUDE_DIRS}
         ${GLIBMM_INCLUDE_DIRS}
+        ${CAIROMM_INCLUDE_DIRS}
         )
 target_link_libraries(touchegg-music-client
         stdc++fs # std::filesystem
@@ -67,5 +69,6 @@ target_link_libraries(touchegg-music-client
         ${LIBPULSE_LIBRARIES}
         ${DBUS_LIBRARIES}
         ${GLIBMM_LIBRARIES}
+        ${CAIROMM_LIBRARIES}
         )
 add_definitions(-DAUTO_COLORS=ON)
