@@ -3,6 +3,7 @@
 #include <cairomm/cairomm.h>
 
 #include <string>
+#include <utility>
 
 VolumeWindow::VolumeWindow(std::unique_ptr<CairoSurface> cairo_surface,
                            const Rectangle& monitor,

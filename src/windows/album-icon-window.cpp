@@ -4,6 +4,8 @@
 #include <gdk/gdk.h>
 #include <glib-object.h>
 
+#include <utility>
+
 AlbumIconWindow::AlbumIconWindow(std::unique_ptr<CairoSurface> cairo_surface,
                                  const Rectangle& monitor,
                                  const WindowsConfig& windows_config)

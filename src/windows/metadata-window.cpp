@@ -3,6 +3,7 @@
 #include <cairomm/cairomm.h>
 
 #include <algorithm>
+#include <utility>
 
 MetadataWindow::MetadataWindow(std::unique_ptr<CairoSurface> cairo_surface,
                                const Rectangle& monitor,

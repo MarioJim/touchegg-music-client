@@ -1,6 +1,7 @@
 #include "metadata-providers/spotify-signals-provider.h"
 
 #include <string>
+#include <utility>
 
 SpotifySignalsProvider::SpotifySignalsProvider() {
   Gio::init();

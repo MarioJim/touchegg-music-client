@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <utility>
 
 SpotifyNotificationsProvider::SpotifyNotificationsProvider() {
   DBusError error;
