@@ -44,8 +44,13 @@ If the metadata struct has a valid album icon, this window displays it.
 
 ## Dependencies
 
-- Have [touchégg](https://github.com/JoseExposito/touchegg) installed and running
-- libpulse (`libpulse` in Arch-based distros, `libpulse-dev` in Debian-based distros)
+Besides installing and running [touchégg](https://github.com/JoseExposito/touchegg):
+
+| **Arch-based distros** | **Debian-based distros** |
+|------------------------|--------------------------|
+| `cairomm`              | `libcairomm-1.0-dev`     |
+| `glibmm`               | `libglibmm-2.4-dev`      |
+| `libpulse`             | `libpulse-dev`           |
 
 ## Installation
 
@@ -66,6 +71,6 @@ $ paru -S touchegg-music-client
 - [ ] Configurable PulseAudio sink
 - [ ] ~~Migrate to pangomm for text rendering~~
 - [x] Migrate to cairomm
-- [ ] Migrate DBus connection to glibmm
+- [x] Migrate SpotifySignalsProvider's DBus connection to glibmm
 - [ ] Add a configuration file
 - [ ] Add new providers (chromium, vlc)
