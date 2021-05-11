@@ -1,6 +1,6 @@
 #include "windows/volume-window.h"
 
-#include <cairo.h>
+#include <cairomm/cairomm.h>
 
 #include <string>
 
@@ -12,12 +12,12 @@ VolumeWindow::VolumeWindow(std::unique_ptr<CairoSurface> cairo_surface,
       windows_config(windows_config) {}
 
 void VolumeWindow::render(double volume_percentage) {
-  cairo_t* ctx = cairo_surface->getContext();
+  Cairo::Context ctx(cairo_surface->getContext(), false);
 
   // Clear the background
-  cairo_set_source_rgba(ctx, 0, 0, 0, 0);
-  cairo_set_operator(ctx, CAIRO_OPERATOR_SOURCE);
-  cairo_paint(ctx);
+  ctx.set_source_rgba(0, 0, 0, 0);
+  ctx.set_operator(Cairo::Operator::OPERATOR_SOURCE);
+  ctx.paint();
 
   double background_x = windows_config.indicatorBackgroundX(monitor);
   double background_y = windows_config.backgroundY(monitor);
@@ -28,37 +28,37 @@ void VolumeWindow::render(double volume_percentage) {
       background_x + windows_config.kIndicatorBackgroundHorizMargin;
 
   // Draw the window background
-  cairo_rectangle(ctx, background_x, background_y, background_width,
-                  background_height);
-  cairo_set_source_rgba(ctx, 0, 0, 0, 0.9);
-  cairo_fill(ctx);
+  ctx.rectangle(background_x, background_y, background_width,
+                background_height);
+  ctx.set_source_rgba(0, 0, 0, 0.9);
+  ctx.fill();
 
   // Draw the volume indicator background
-  cairo_rectangle(ctx, indicator_x, windows_config.indicatorY(monitor, 100),
-                  windows_config.kIndicatorWidth,
-                  windows_config.indicatorHeight(100));
-  cairo_set_source_rgba(ctx, 100 / 255.0, 100 / 255.0, 100 / 255.0, 1);
-  cairo_fill(ctx);
+  ctx.rectangle(indicator_x, windows_config.indicatorY(monitor, 100),
+                windows_config.kIndicatorWidth,
+                windows_config.indicatorHeight(100));
+  ctx.set_source_rgba(100 / 255.0, 100 / 255.0, 100 / 255.0, 1);
+  ctx.fill();
 
   // Draw the volume indicator
-  cairo_rectangle(ctx, indicator_x,
-                  windows_config.indicatorY(monitor, volume_percentage),
-                  windows_config.kIndicatorWidth,
-                  windows_config.indicatorHeight(volume_percentage));
-  cairo_set_source_rgba(ctx, 62 / 255.0, 159 / 255.0, 237 / 255.0, 1);
-  cairo_fill(ctx);
+  ctx.rectangle(indicator_x,
+                windows_config.indicatorY(monitor, volume_percentage),
+                windows_config.kIndicatorWidth,
+                windows_config.indicatorHeight(volume_percentage));
+  ctx.set_source_rgba(62 / 255.0, 159 / 255.0, 237 / 255.0, 1);
+  ctx.fill();
 
   // Write the volume text
   std::string volume_string =
       std::to_string(static_cast<int>(volume_percentage));
-  cairo_text_extents_t extents;
-  cairo_set_font_size(ctx, 14);
-  cairo_text_extents(ctx, volume_string.c_str(), &extents);
+  Cairo::TextExtents extents;
+  ctx.set_font_size(14);
+  ctx.get_text_extents(volume_string, extents);
   double txt_x = background_x + (background_width - extents.width) / 2;
   double txt_y = background_y + background_height - 18;
-  cairo_set_source_rgba(ctx, 1, 1, 1, 1);
-  cairo_move_to(ctx, txt_x, txt_y);
-  cairo_show_text(ctx, volume_string.c_str());
+  ctx.set_source_rgba(1, 1, 1, 1);
+  ctx.move_to(txt_x, txt_y);
+  ctx.show_text(volume_string);
 
   cairo_surface->flush();
 }
