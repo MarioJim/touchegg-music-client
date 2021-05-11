@@ -64,8 +64,8 @@ $ paru -S touchegg-music-client
 - [ ] Configurable windows
 - [ ] Configurable providers priority
 - [ ] Configurable PulseAudio sink
-- ~~[ ] Migrate to pangomm for text rendering~~
-- [ ] Migrate to cairomm
+- [ ] ~~Migrate to pangomm for text rendering~~
+- [x] Migrate to cairomm
 - [ ] Migrate DBus connection to glibmm
 - [ ] Add a configuration file
 - [ ] Add new providers (chromium, vlc)
