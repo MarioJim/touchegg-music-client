@@ -186,6 +186,7 @@ GdkPixbuf *SpotifyNotificationsProvider::parseIconFromDBusVariant(
   GdkPixbuf *pixbuf =
       gdk_pixbuf_new_from_bytes(bytes, GDK_COLORSPACE_RGB, has_alpha,
                                 bits_per_sample, width, height, rowstride);
+  g_bytes_unref(bytes);
 
   if (pixbuf == nullptr) {
     std::cout << "SpotifyNotificationsProvider: Couldn't generate image from "
