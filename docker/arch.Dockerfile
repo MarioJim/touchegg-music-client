@@ -2,7 +2,7 @@ FROM archlinux:base-devel
 
 RUN echo "Server = https://mirror.osbeck.com/archlinux/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist \
     && pacman -Syu --noconfirm \
-        cairo \
+        cairomm \
         cmake \
         git \
         glibmm \

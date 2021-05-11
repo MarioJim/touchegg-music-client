@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
         ca-certificates \
         cmake \
         git \
-        libcairo2-dev \
+        libcairomm-1.0-dev \
         libglibmm-2.4-dev \
         libgtk-3-dev \
         libinput-dev \
