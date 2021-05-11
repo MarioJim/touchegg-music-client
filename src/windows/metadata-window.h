@@ -1,7 +1,7 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_METADATA_WINDOW_H
 #define TOUCHEGG_MUSIC_CLIENT_METADATA_WINDOW_H
 
-#include <cairo.h>
+#include <cairomm/cairomm.h>
 
 #include <memory>
 #include <string>
@@ -20,11 +20,12 @@ class MetadataWindow {
   void render(const std::shared_ptr<const Metadata>& metadata);
 
  private:
-  inline void renderPlaybackStatusIcon(cairo_t* ctx, PlaybackStatus status,
+  inline void renderPlaybackStatusIcon(Cairo::Context* ctx,
+                                       PlaybackStatus status,
                                        double music_window_x,
                                        double music_window_y) const;
-  static std::unique_ptr<char[]> trimText(cairo_t* ctx, const std::string& text,
-                                          double max_width);
+  static inline std::string trimText(const Cairo::Context& ctx,
+                                     const std::string& text, double max_width);
 
   std::unique_ptr<CairoSurface> cairo_surface;
   const Rectangle monitor;
