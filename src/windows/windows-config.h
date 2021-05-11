@@ -1,7 +1,7 @@
 #ifndef TOUCHEGG_MUSIC_CLIENT_WINDOWS_CONFIG_H
 #define TOUCHEGG_MUSIC_CLIENT_WINDOWS_CONFIG_H
 
-#include <utils/rectangle.h>
+#include "utils/rectangle.h"
 
 class WindowsConfig {
  public:
