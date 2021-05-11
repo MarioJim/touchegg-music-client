@@ -1,6 +1,6 @@
 #include "windows/album-icon-window.h"
 
-#include <cairo.h>
+#include <cairomm/cairomm.h>
 #include <gdk/gdk.h>
 #include <glib-object.h>
 
@@ -27,24 +27,20 @@ void AlbumIconWindow::render(GdkPixbuf* pixbuf) {
                         windows_config.indicatorBackgroundWidth() +
                         windows_config.kMarginBetweenWindows;
   double background_y = windows_config.backgroundY(monitor);
-  double album_icon_area_size = background_height;
-  double album_icon_size =
-      album_icon_area_size - 2 * windows_config.kMarginAlbumIcon;
+  double icon_area_size = background_height;
+  double icon_size = icon_area_size - 2 * windows_config.kMarginAlbumIcon;
 
-  int album_icon_size_int = static_cast<int>(album_icon_size);
-  int album_icon_x =
-      static_cast<int>(background_x + windows_config.kMarginAlbumIcon);
-  int album_icon_y =
-      static_cast<int>(background_y + windows_config.kMarginAlbumIcon);
-  GdkPixbuf* scaled_album_icon = gdk_pixbuf_scale_simple(
-      pixbuf, album_icon_size_int, album_icon_size_int, GDK_INTERP_BILINEAR);
-  cairo_t* album_icon_ctx = cairo_surface->getContext();
-  gdk_cairo_set_source_pixbuf(album_icon_ctx, scaled_album_icon, album_icon_x,
-                              album_icon_y);
-  cairo_paint(album_icon_ctx);
-  cairo_fill(album_icon_ctx);
+  int icon_size_int = static_cast<int>(icon_size);
+  int icon_x = static_cast<int>(background_x + windows_config.kMarginAlbumIcon);
+  int icon_y = static_cast<int>(background_y + windows_config.kMarginAlbumIcon);
+
+  GdkPixbuf* scaled_icon = gdk_pixbuf_scale_simple(
+      pixbuf, icon_size_int, icon_size_int, GDK_INTERP_BILINEAR);
+  Cairo::Context ctx(cairo_surface->getContext(), false);
+  gdk_cairo_set_source_pixbuf(ctx.cobj(), scaled_icon, icon_x, icon_y);
+  ctx.paint();
 
   cairo_surface->flush();
 
-  g_object_unref(scaled_album_icon);
+  g_object_unref(scaled_icon);
 }
