@@ -3,6 +3,11 @@
 
 #include <pulse/pulseaudio.h>
 
+#include <condition_variable>
+#include <mutex>
+#include <queue>
+#include <string>
+
 /**
  * Interface to communicate with a PulseAudio server
  * Based on polybar's implementation
@@ -22,10 +27,33 @@ class PulseAudioAdapter {
   double get_volume();
 
  private:
+  void init_sink_updating_threads();
+
+  static void context_callback(pa_context* ctx, void* userdata);
+  void handle_context(pa_context* ctx);
+
+  static void sink_info_callback(pa_context* ctx, const pa_sink_info* info,
+                                 int eol, void* userdata);
+  void handle_sink_info(const pa_sink_info* info, int eol);
+
+  static void event_callback(pa_context* ctx,
+                             pa_subscription_event_type_t event_type,
+                             uint32_t event_sink_index, void* userdata);
+  void handle_event(pa_subscription_event_type_t event_type,
+                    uint32_t event_sink_index);
+
+  static void success_callback(pa_context* ctx, int cb_success, void* userdata);
+
   pa_threaded_mainloop* mainloop{nullptr};
   pa_context* context{nullptr};
   pa_cvolume sink_volume{};
-  uint32_t sink_index;
+  uint32_t sink_index{};
+
+  std::mutex sink_mutex{};
+  std::condition_variable update_sink_index_cv{};
+  bool update_sink_index{false};
+  std::condition_variable update_sink_props_cv{};
+  bool update_sink_props{false};
 
   int success = 0;
 
