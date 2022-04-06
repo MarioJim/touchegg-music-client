@@ -8,6 +8,10 @@
 
 all: arch_image debian_image
 
+update_bases:
+	docker pull debian:bullseye
+	docker pull archlinux:base-devel
+
 arch_image:
 	docker build . -f arch.Dockerfile -t mariojim/touchegg-music-client-deps:archlinux
 	docker push mariojim/touchegg-music-client-deps:archlinux
@@ -16,4 +20,4 @@ debian_image:
 	docker build . -f debian.Dockerfile -t mariojim/touchegg-music-client-deps:debian
 	docker push mariojim/touchegg-music-client-deps:debian
 
-.PHONY = all arch_image debian_image
+.PHONY = all update_bases arch_image debian_image
