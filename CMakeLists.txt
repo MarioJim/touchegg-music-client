@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(touchegg-music-client VERSION 1.1.1)
+project(touchegg-music-client VERSION 1.1.2)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -13,7 +13,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     include(cmake/code-style.cmake)
 endif ()
 
-find_package(Threads REQUIRED) # Required to use std threads
+find_package(Threads REQUIRED)
 find_package(LIBUDEV REQUIRED)
 find_package(LIBINPUT REQUIRED)
 find_package(PUGIXML REQUIRED)
@@ -35,7 +35,8 @@ file(GLOB_RECURSE SOURCE_FILES
 list(APPEND SOURCE_FILES "${TOUCHEGG_SOURCE_FILES}")
 
 add_executable(touchegg-music-client ${SOURCE_FILES})
-target_include_directories(touchegg-music-client PUBLIC
+target_include_directories(touchegg-music-client
+        PUBLIC
         ${PROJECT_SOURCE_DIR}/src
         ${touchegg_SOURCE_DIR}/src
         ${LIBUDEV_INCLUDE_DIRS}
