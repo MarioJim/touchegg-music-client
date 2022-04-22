@@ -38,4 +38,4 @@ void OffsetVolumeAction::onGestureUpdate(const Gesture& gesture) {
   last_gesture_percentage = gesture.percentage();
 }
 
-void OffsetVolumeAction::onGestureEnd(const Gesture& gesture) {}
+void OffsetVolumeAction::onGestureEnd(const Gesture& /*gesture*/) {}

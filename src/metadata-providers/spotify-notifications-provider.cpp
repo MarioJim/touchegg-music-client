@@ -38,7 +38,7 @@ SpotifyNotificationsProvider::SpotifyNotificationsProvider() {
   dbus_message_iter_open_container(&appender, DBUS_TYPE_ARRAY, "s",
                                    &array_appender);
   dbus_message_iter_append_basic(&array_appender, DBUS_TYPE_STRING,
-                                 &kNotificationFilters[0]);
+                                 kNotificationFilters.data());
   dbus_message_iter_close_container(&appender, &array_appender);
 
   dbus_uint32_t flags = 0;
@@ -176,7 +176,7 @@ GdkPixbuf *SpotifyNotificationsProvider::parseIconFromDBusVariant(
 
   size_t pixelstride = (n_channels * bits_per_sample + 7) / 8;
   size_t len_expected = (height - 1) * rowstride + width * pixelstride;
-  if (len_expected != bytes_len) {
+  if (len_expected != static_cast<size_t>(bytes_len)) {
     std::cout
         << "SpotifyNotificationsProvider: Album icon didn't pass sanity check"
         << std::endl;

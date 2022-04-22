@@ -24,8 +24,8 @@ class GestureController : public GestureControllerDelegate {
  private:
   const MetadataController& metadata_controller;
   PulseAudioAdapter& adapter;
-  const WindowsConfig& windows_config;
   const WindowSystem& window_system;
+  const WindowsConfig& windows_config;
 
   std::unique_ptr<Action> action{nullptr};
 };
