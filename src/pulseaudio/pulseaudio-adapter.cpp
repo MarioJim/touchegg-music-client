@@ -74,7 +74,29 @@ PulseAudioAdapter::PulseAudioAdapter() : mainloop(pa_threaded_mainloop_new()) {
 
   pa_threaded_mainloop_unlock(mainloop);
 
-  init_sink_updating_threads();
+  std::thread update_sink_index_thread([this]() {
+    while (true) {
+      std::unique_lock lock(sink_mutex);
+      pending_sink_op_cv.wait(lock, [this] { return pending_sink_op != NONE; });
+      SinkOperation sink_op = pending_sink_op;
+      pending_sink_op = NONE;
+
+      pa_threaded_mainloop_lock(mainloop);
+      pa_operation *operation =
+          (sink_op == UPDATE_SINK_PROPS)
+              ? pa_context_get_sink_info_by_index(context, sink_index,
+                                                  sink_info_callback, this)
+              : pa_context_get_sink_info_by_name(context, kDefaultSink,
+                                                 sink_info_callback, this);
+
+      while (pa_operation_get_state(operation) != PA_OPERATION_DONE) {
+        pa_threaded_mainloop_wait(mainloop);
+      }
+      pa_operation_unref(operation);
+      pa_threaded_mainloop_unlock(mainloop);
+    }
+  });
+  update_sink_index_thread.detach();
 }
 
 PulseAudioAdapter::~PulseAudioAdapter() {
@@ -118,46 +140,6 @@ void PulseAudioAdapter::offset_volume(double delta_percentage) {
 double PulseAudioAdapter::get_volume() {
   pa_volume_t volume = pa_cvolume_max(&sink_volume);
   return static_cast<double>(volume) * 100.0 / PA_VOLUME_NORM + 0.5;
-}
-
-void PulseAudioAdapter::init_sink_updating_threads() {
-  std::thread update_sink_index_thread([this]() {
-    while (true) {
-      std::unique_lock lock(sink_mutex);
-      update_sink_index_cv.wait(lock, [this] { return update_sink_index; });
-      update_sink_index = false;
-
-      pa_threaded_mainloop_lock(mainloop);
-      pa_operation *operation = pa_context_get_sink_info_by_name(
-          context, kDefaultSink, sink_info_callback, this);
-
-      while (pa_operation_get_state(operation) != PA_OPERATION_DONE) {
-        pa_threaded_mainloop_wait(mainloop);
-      }
-      pa_operation_unref(operation);
-      pa_threaded_mainloop_unlock(mainloop);
-    }
-  });
-  update_sink_index_thread.detach();
-
-  std::thread update_sink_props_thread([this]() {
-    while (true) {
-      std::unique_lock lock(sink_mutex);
-      update_sink_props_cv.wait(lock, [this] { return update_sink_props; });
-      update_sink_props = false;
-
-      pa_threaded_mainloop_lock(mainloop);
-      pa_operation *operation = pa_context_get_sink_info_by_index(
-          context, sink_index, sink_info_callback, this);
-
-      while (pa_operation_get_state(operation) != PA_OPERATION_DONE) {
-        pa_threaded_mainloop_wait(mainloop);
-      }
-      pa_operation_unref(operation);
-      pa_threaded_mainloop_unlock(mainloop);
-    }
-  });
-  update_sink_props_thread.detach();
 }
 
 void PulseAudioAdapter::context_callback(pa_context *ctx, void *userdata) {
@@ -220,21 +202,22 @@ void PulseAudioAdapter::handle_event(pa_subscription_event_type_t event_type,
                               event_operation == PA_SUBSCRIPTION_EVENT_CHANGE &&
                               event_sink_index == sink_index;
 
+  pa_threaded_mainloop_signal(mainloop, 0);
+
+  SinkOperation new_op = NONE;
   if (server_changed || new_sink || current_sink_removed) {
-    {
-      std::scoped_lock lock(sink_mutex);
-      update_sink_index = true;
-    }
-    update_sink_index_cv.notify_one();
+    new_op = RESET_SINK;
   } else if (current_sink_changed) {
-    {
-      std::scoped_lock lock(sink_mutex);
-      update_sink_props = true;
-    }
-    update_sink_props_cv.notify_one();
+    new_op = UPDATE_SINK_PROPS;
   }
 
-  pa_threaded_mainloop_signal(mainloop, 0);
+  if (new_op != NONE) {
+    {
+      std::scoped_lock lock(sink_mutex);
+      pending_sink_op = RESET_SINK;
+    }
+    pending_sink_op_cv.notify_one();
+  }
 }
 
 void PulseAudioAdapter::success_callback(pa_context * /*ctx*/, int cb_success,

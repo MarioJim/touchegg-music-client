@@ -27,8 +27,6 @@ class PulseAudioAdapter {
   double get_volume();
 
  private:
-  void init_sink_updating_threads();
-
   static void context_callback(pa_context* ctx, void* userdata);
   void handle_context(pa_context* ctx);
 
@@ -50,10 +48,13 @@ class PulseAudioAdapter {
   uint32_t sink_index{};
 
   std::mutex sink_mutex{};
-  std::condition_variable update_sink_index_cv{};
-  bool update_sink_index{false};
-  std::condition_variable update_sink_props_cv{};
-  bool update_sink_props{false};
+  std::condition_variable pending_sink_op_cv{};
+  enum SinkOperation {
+    NONE,
+    RESET_SINK,
+    UPDATE_SINK_PROPS,
+  };
+  SinkOperation pending_sink_op{NONE};
 
   int success = 0;
 
