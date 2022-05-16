@@ -4,6 +4,7 @@
 #include <dbus/dbus.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include <array>
 #include <memory>
 #include <optional>
 #include <string_view>
@@ -14,7 +15,7 @@
 class SpotifyNotificationsProvider : public BaseMetadataProvider {
  public:
   SpotifyNotificationsProvider();
-  ~SpotifyNotificationsProvider();
+  virtual ~SpotifyNotificationsProvider();
 
   SpotifyNotificationsProvider(const SpotifyNotificationsProvider &other) =
       delete;
@@ -39,7 +40,7 @@ class SpotifyNotificationsProvider : public BaseMetadataProvider {
   std::shared_ptr<const Metadata> metadata;
 
   const char *const kDBusBecomeMonitor{"BecomeMonitor"};
-  const std::array<const char *, 1> kNotificationFilters = {
+  const std::array<const char *, 1> kNotificationFilters{
       "type='method_call',interface='org.freedesktop.Notifications',"
       "member='Notify',arg0='Spotify'"};
   static constexpr const std::string_view kNotificationsPath =

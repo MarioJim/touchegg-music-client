@@ -80,6 +80,7 @@ PulseAudioAdapter::PulseAudioAdapter() : mainloop(pa_threaded_mainloop_new()) {
       pending_sink_op_cv.wait(lock, [this] { return pending_sink_op != NONE; });
       SinkOperation sink_op = pending_sink_op;
       pending_sink_op = NONE;
+      lock.unlock();
 
       pa_threaded_mainloop_lock(mainloop);
       pa_operation *operation =
@@ -214,7 +215,7 @@ void PulseAudioAdapter::handle_event(pa_subscription_event_type_t event_type,
   if (new_op != NONE) {
     {
       std::scoped_lock lock(sink_mutex);
-      pending_sink_op = RESET_SINK;
+      pending_sink_op = new_op;
     }
     pending_sink_op_cv.notify_one();
   }
